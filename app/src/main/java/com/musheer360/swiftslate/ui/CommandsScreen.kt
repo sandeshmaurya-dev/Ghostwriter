@@ -1,13 +1,16 @@
 package com.musheer360.swiftslate.ui
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
+import android.text.format.DateUtils
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,12 +24,18 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.withContext
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -36,18 +45,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.musheer360.swiftslate.R
+import com.musheer360.swiftslate.ui.theme.GhostPalette
 import com.musheer360.swiftslate.manager.CommandManager
+import com.musheer360.swiftslate.manager.HistoryEntry
+import com.musheer360.swiftslate.manager.StatsManager
 import com.musheer360.swiftslate.model.Command
 import com.musheer360.swiftslate.model.CommandType
 import com.musheer360.swiftslate.ui.components.LocalSlateRhythm
 import com.musheer360.swiftslate.ui.components.ScreenTitle
 import com.musheer360.swiftslate.ui.components.SlateCard
+import com.musheer360.swiftslate.ui.components.SlateDivider
 import com.musheer360.swiftslate.ui.components.SlateItemCard
 import com.musheer360.swiftslate.ui.components.SlateTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CommandsScreen(commandManager: CommandManager) {
+fun CommandsScreen(commandManager: CommandManager, statsManager: StatsManager) {
+    val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     var commands by remember { mutableStateOf(commandManager.getCommands()) }
     val displayCommands = remember(commands) {
@@ -62,6 +76,33 @@ fun CommandsScreen(commandManager: CommandManager) {
     var editingTrigger by rememberSaveable { mutableStateOf<String?>(null) }
     var commandToDelete by remember { mutableStateOf<String?>(null) }
     var isFormExpanded by rememberSaveable { mutableStateOf(false) }
+
+    // Recent-activity feed (StatsManager's history ring). Polled instead of observed:
+    // SharedPreferences has no change callback, and a 2s cadence under IO is imperceptible
+    // for entries the service records after each replacement.
+    var history by remember { mutableStateOf<List<HistoryEntry>>(emptyList()) }
+    val appLabels = remember { mutableStateMapOf<String, String>() }
+    LaunchedEffect(Unit) {
+        while (isActive) {
+            history = withContext(Dispatchers.IO) { statsManager.recentHistory() }
+            history.mapNotNull { it.appPackage }.distinct().forEach { pkg ->
+                if (pkg !in appLabels) {
+                    appLabels[pkg] = withContext(Dispatchers.IO) {
+                        try {
+                            context.packageManager
+                                .getApplicationInfo(pkg, 0)
+                                .loadLabel(context.packageManager)
+                                .toString()
+                        } catch (_: Exception) {
+                            pkg.substringAfterLast('.', pkg)
+                        }
+                    }
+                }
+            }
+            delay(2000)
+        }
+    }
+
     val prefix = commandManager.getTriggerPrefix()
     val errorPrefixMsg = stringResource(R.string.commands_error_prefix, prefix)
     val errorDuplicateMsg = stringResource(R.string.commands_error_duplicate)
@@ -215,6 +256,15 @@ fun CommandsScreen(commandManager: CommandManager) {
                                         fontSize = rhythm.emphasisSize,
                                         color = MaterialTheme.colorScheme.primary
                                     )
+                                    if (cmd.readsScreen) {
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(
+                                            text = stringResource(R.string.commands_screen_badge),
+                                            fontSize = 11.sp,
+                                            fontWeight = FontWeight.SemiBold,
+                                            color = GhostPalette.Cyan
+                                        )
+                                    }
                                     if (!cmd.isBuiltIn) {
                                         Spacer(modifier = Modifier.weight(1f))
                                         Text(
@@ -284,6 +334,80 @@ fun CommandsScreen(commandManager: CommandManager) {
                                     }
                                 }
                             }
+                        }
+                    }
+
+                    // Recent activity — a live feed of what actually ran, recorded by the
+                    // service after each replacement. Always shown (even when empty) so the
+                    // header reads as a feature, not a glitch. Each entry is its own
+                    // LazyColumn item with animateItem, so a fresh event slides in under
+                    // the header while older rows ease down with the placement spring.
+                    item(key = "recent_activity") {
+                        Column {
+                            Spacer(modifier = Modifier.height(rhythm.groupGap))
+                            SlateDivider()
+                            Spacer(modifier = Modifier.height(rhythm.groupGap))
+                            Text(
+                                text = stringResource(R.string.history_title),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = rhythm.emphasisSize,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Spacer(modifier = Modifier.height(rhythm.listGap))
+                            if (history.isEmpty()) {
+                                Text(
+                                    text = stringResource(R.string.history_empty),
+                                    fontSize = rhythm.bodySize,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(vertical = 8.dp)
+                                )
+                            }
+                        }
+                    }
+                    items(history.take(5), key = { "hist_${it.timestamp}-${it.trigger}" }) { entry ->
+                        Column(
+                            modifier = Modifier.animateItem(
+                                fadeInSpec = tween(250),
+                                placementSpec = spring(
+                                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                                    stiffness = Spring.StiffnessMediumLow
+                                ),
+                                fadeOutSpec = tween(150)
+                            )
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = entry.trigger,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = rhythm.emphasisSize,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                                if (!entry.success) {
+                                    Spacer(modifier = Modifier.width(rhythm.formGap))
+                                    Text(
+                                        text = stringResource(R.string.history_failed_tag),
+                                        fontSize = rhythm.captionSize,
+                                        color = MaterialTheme.colorScheme.error
+                                    )
+                                }
+                                Spacer(modifier = Modifier.weight(1f))
+                                Text(
+                                    text = entry.appPackage?.let { appLabels[it] ?: it } ?: "",
+                                    fontSize = rhythm.captionSize,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 1
+                                )
+                            }
+                            Text(
+                                text = DateUtils.getRelativeTimeSpanString(
+                                    entry.timestamp,
+                                    System.currentTimeMillis(),
+                                    DateUtils.MINUTE_IN_MILLIS
+                                ).toString(),
+                                fontSize = rhythm.captionSize,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                            )
+                            Spacer(modifier = Modifier.height(rhythm.listGap))
                         }
                     }
                 }

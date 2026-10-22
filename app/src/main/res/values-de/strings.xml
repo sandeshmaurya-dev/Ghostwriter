@@ -1,35 +1,23 @@
-<resources>
-    <string name="app_name">SwiftSlate</string>
-    <string name="accessibility_service_label">SwiftSlate Assistent</string>
-    <string name="accessibility_service_desc">Bietet systemweite KI-Textersetzungen, wenn Auslösebefehle eingegeben werden.</string>
+﻿<resources>
+    <string name="app_name">Ghostwriter</string>
+    <string name="accessibility_service_label">Ghostwriter Assistent</string>
+    <string name="accessibility_service_desc">Bietet systemweite KI-Textersetzungen, wenn AuslÃ¶sebefehle eingegeben werden.</string>
 
     <!-- Dashboard -->
     <string name="dashboard_title">Dashboard</string>
     <string name="service_status_active">Aktiv</string>
     <string name="service_status_inactive">Inaktiv</string>
     <string name="service_enable">Aktivieren</string>
-    <string name="dashboard_api_keys_title">API-Schlüssel</string>
-    <string name="dashboard_keys_configured">%1$d Schlüssel konfiguriert</string>
-    <string name="dashboard_add_key_hint">Füge einen API-Schlüssel hinzu, um zu beginnen.</string>
 
     <!-- Keys -->
-    <string name="keys_title">API-Schlüssel</string>
-    <string name="keys_api_key_label">API-Schlüssel</string>
-    <string name="keys_testing">Wird getestet…</string>
-    <string name="keys_add_key">Schlüssel hinzufügen</string>
-    <string name="keys_valid_added">Gültiger Schlüssel hinzugefügt!</string>
-    <string name="keys_already_added">Dieser Schlüssel wurde bereits hinzugefügt</string>
-    <string name="keys_validation_failed">Validierung fehlgeschlagen</string>
-    <string name="keys_custom_endpoint_required">Konfiguriere die Endpunkt-URL in den Einstellungen, bevor du einen Schlüssel für den benutzerdefinierten Anbieter hinzufügst</string>
-    <string name="keys_get_api_key">Hol dir deinen %1$s API-Schlüssel ↗</string>
 
     <!-- Commands -->
     <string name="commands_title">Befehle</string>
-    <string name="commands_add_custom_title">Benutzerdefinierten Befehl hinzufügen</string>
+    <string name="commands_add_custom_title">Benutzerdefinierten Befehl hinzufÃ¼gen</string>
     <string name="commands_trigger_label">Trigger (z. B. %1$scode)</string>
     <string name="commands_prompt_label">Prompt (z. B. Als Gedicht umschreiben)</string>
-    <string name="commands_add_command">Befehl hinzufügen</string>
-    <string name="commands_delete_command">Löschen</string>
+    <string name="commands_add_command">Befehl hinzufÃ¼gen</string>
+    <string name="commands_delete_command">LÃ¶schen</string>
     <string name="commands_edit_command">Bearbeiten</string>
     <string name="commands_save_command">Befehl speichern</string>
     <string name="commands_cancel">Abbrechen</string>
@@ -39,8 +27,8 @@
     <string name="commands_built_in">Integriert</string>
     <string name="commands_error_prefix">Trigger muss mit \'%1$s\' beginnen</string>
     <string name="commands_error_duplicate">Ein Befehl mit diesem Trigger existiert bereits</string>
-    <string name="commands_error_conflict">Konflikt mit bestehendem Befehl \'%1$s\' — ein Trigger ist ein Präfix des anderen</string>
-    <string name="commands_error_empty_trigger">Trigger muss einen Namen nach dem Präfix haben</string>
+    <string name="commands_error_conflict">Konflikt mit bestehendem Befehl \'%1$s\' â€” ein Trigger ist ein PrÃ¤fix des anderen</string>
+    <string name="commands_error_empty_trigger">Trigger muss einen Namen nach dem PrÃ¤fix haben</string>
 
     <!-- Settings -->
     <string name="settings_title">Einstellungen</string>
@@ -65,8 +53,8 @@
     <string name="backup_import">Importieren</string>
     <string name="backup_export_success">Befehle erfolgreich exportiert</string>
     <string name="backup_import_success">Befehle erfolgreich importiert</string>
-    <string name="backup_import_error">Ungültige Sicherungsdatei</string>
-    <string name="keys_keystore_error">Sicherer Schlüsselspeicher ist auf diesem Gerät nicht verfügbar. Schlüssel können nicht gespeichert werden.</string>
+    <string name="backup_import_error">UngÃ¼ltige Sicherungsdatei</string>
+    <string name="keys_keystore_error">Sicherer SchlÃ¼sselspeicher ist auf diesem GerÃ¤t nicht verfÃ¼gbar. SchlÃ¼ssel kÃ¶nnen nicht gespeichert werden.</string>
     <string name="backup_import_confirm">Dies ersetzt alle vorhandenen benutzerdefinierten Befehle. Fortfahren?</string>
     <string name="backup_import_cancel">Abbrechen</string>
     <string name="settings_check_updates">Nach Updates suchen</string>
@@ -74,80 +62,77 @@
     <string name="commands_expand">Ausklappen</string>
 
     <!-- Delete confirmation -->
-    <string name="delete_confirm_command_title">Diesen Befehl löschen?</string>
-    <string name="delete_confirm_key_title">Diesen API-Schlüssel löschen?</string>
-    <string name="delete_confirm_message">Diese Aktion kann nicht rückgängig gemacht werden.</string>
-    <string name="delete_confirm_button">Löschen</string>
+    <string name="delete_confirm_command_title">Diesen Befehl lÃ¶schen?</string>
+    <string name="delete_confirm_key_title">Diesen API-SchlÃ¼ssel lÃ¶schen?</string>
+    <string name="delete_confirm_message">Diese Aktion kann nicht rÃ¼ckgÃ¤ngig gemacht werden.</string>
+    <string name="delete_confirm_button">LÃ¶schen</string>
     <string name="backup_export_error">Export fehlgeschlagen</string>
-    <string name="commands_search_hint">Befehle durchsuchen…</string>
-    <string name="commands_search_close">Suche schließen</string>
+    <string name="commands_search_hint">Befehle durchsuchenâ€¦</string>
+    <string name="commands_search_close">Suche schlieÃŸen</string>
     <string name="commands_search_empty">Keine Befehle gefunden</string>
-    <string name="keys_empty">Keine API-Schlüssel hinzugefügt</string>
     <string name="dashboard_monthly_requests">Diesen Monat</string>
     <string name="dashboard_favorite_command">Top-Befehl</string>
-    <string name="dashboard_no_data">—</string>
+    <string name="dashboard_no_data">â€”</string>
     <string name="dashboard_last_7_days">Letzte 7 Tage</string>
     <string name="settings_temperature_title">Temperatur</string>
-    <string name="settings_made_by">Mit Liebe gemacht von Musheer Alam</string>
+    <string name="settings_made_by">Mit Liebe gemacht von Sandesh Maurya</string>
     <string name="settings_sponsor">Auf GitHub sponsern</string>
 
     <!-- Toasts and errors -->
     <string name="toast_replace_failed">Text konnte nicht ersetzt werden</string>
     <string name="toast_custom_not_configured">Benutzerdefinierter Anbieter nicht konfiguriert. Lege Endpoint und Modell in den Einstellungen fest.</string>
-    <string name="toast_key_rate_limited">API-Schlüssel ratenbegrenzt. Versuche es in %1$d s erneut</string>
-    <string name="toast_no_keys">Keine API-Schlüssel konfiguriert</string>
-    <string name="toast_all_keys_invalid">Alle API-Schlüssel sind ungültig. Bitte überprüfe deine Schlüssel</string>
-    <string name="toast_request_timed_out">Zeitüberschreitung der Anfrage</string>
+    <string name="toast_key_rate_limited">API-SchlÃ¼ssel ratenbegrenzt. Versuche es in %1$d s erneut</string>
+    <string name="toast_no_keys">Keine API-SchlÃ¼ssel konfiguriert</string>
+    <string name="toast_all_keys_invalid">Alle API-SchlÃ¼ssel sind ungÃ¼ltig. Bitte Ã¼berprÃ¼fe deine SchlÃ¼ssel</string>
+    <string name="toast_request_timed_out">ZeitÃ¼berschreitung der Anfrage</string>
     <string name="process_text_title">Befehl anwenden</string>
     <string name="process_text_replace">Ersetzen</string>
     <string name="process_text_copy">Kopieren</string>
-    <string name="process_text_back">Zurück</string>
+    <string name="process_text_back">ZurÃ¼ck</string>
     <string name="process_text_retry">Erneut versuchen</string>
     <string name="process_text_copied">Kopiert</string>
-    <string name="process_text_no_selection">Kein Text ausgewählt</string>
-    <string name="process_text_no_commands">Keine Befehle verfügbar. Füge einen in SwiftSlate hinzu.</string>
-    <string name="toast_restore_failed">Ursprünglicher Text konnte nicht wiederhergestellt werden</string>
-    <string name="toast_nothing_to_undo">Nichts zum Rückgängigmachen</string>
-    <string name="toast_undo_failed">Rückgängigmachen fehlgeschlagen</string>
+    <string name="process_text_no_selection">Kein Text ausgewÃ¤hlt</string>
+    <string name="process_text_no_commands">Keine Befehle verfÃ¼gbar. FÃ¼ge einen in Ghostwriter hinzu.</string>
+    <string name="toast_restore_failed">UrsprÃ¼nglicher Text konnte nicht wiederhergestellt werden</string>
+    <string name="toast_nothing_to_undo">Nichts zum RÃ¼ckgÃ¤ngigmachen</string>
+    <string name="toast_undo_failed">RÃ¼ckgÃ¤ngigmachen fehlgeschlagen</string>
     <string name="toast_nothing_to_copy">Nichts zum Kopieren</string>
     <string name="toast_copied">In die Zwischenablage kopiert</string>
     <string name="toast_nothing_to_cut">Nichts zum Ausschneiden</string>
     <string name="toast_cut">In die Zwischenablage ausgeschnitten</string>
     <string name="toast_clipboard_empty">Zwischenablage ist leer</string>
     <string name="toast_clipboard_failed">Zwischenablage-Vorgang fehlgeschlagen</string>
-    <string name="error_no_model_access">Dein API-Schlüssel hat keinen Zugriff auf dieses Modell.</string>
-    <string name="error_invalid_key">Ungültiger API-Schlüssel. Bitte überprüfe deinen Schlüssel in den Einstellungen.</string>
-    <string name="error_invalid_key_with_hint">Ungültiger API-Schlüssel (%1$s). Bitte überprüfe deine Schlüssel in den Einstellungen.</string>
-    <string name="error_rate_limited">Ratenbegrenzt. Versuche es in Kürze erneut.</string>
-    <string name="error_model_not_found">Modell nicht gefunden. Überprüfe deine Modellauswahl in den Einstellungen.</string>
+    <string name="error_no_model_access">Dein API-SchlÃ¼ssel hat keinen Zugriff auf dieses Modell.</string>
+    <string name="error_invalid_key">UngÃ¼ltiger API-SchlÃ¼ssel. Bitte Ã¼berprÃ¼fe deinen SchlÃ¼ssel in den Einstellungen.</string>
+    <string name="error_invalid_key_with_hint">UngÃ¼ltiger API-SchlÃ¼ssel (%1$s). Bitte Ã¼berprÃ¼fe deine SchlÃ¼ssel in den Einstellungen.</string>
+    <string name="error_rate_limited">Ratenbegrenzt. Versuche es in KÃ¼rze erneut.</string>
+    <string name="error_model_not_found">Modell nicht gefunden. ÃœberprÃ¼fe deine Modellauswahl in den Einstellungen.</string>
     <string name="error_safety_blocked">Antwort durch Sicherheitsfilter blockiert. Versuche, es umzuformulieren.</string>
-    <string name="error_empty_response">Das Modell hat eine leere Antwort zurückgegeben. Versuche es erneut.</string>
-    <string name="error_timeout_connection">Zeitüberschreitung der Anfrage. Überprüfe deine Verbindung.</string>
+    <string name="error_empty_response">Das Modell hat eine leere Antwort zurÃ¼ckgegeben. Versuche es erneut.</string>
+    <string name="error_timeout_connection">ZeitÃ¼berschreitung der Anfrage. ÃœberprÃ¼fe deine Verbindung.</string>
     <string name="error_no_internet">Keine Internetverbindung.</string>
-    <string name="error_endpoint_unreachable">Die API konnte nicht erreicht werden. Überprüfe deine Endpoint-URL.</string>
-    <string name="error_bad_request">Anfrage fehlgeschlagen. Überprüfe deine Einstellungen.</string>
+    <string name="error_endpoint_unreachable">Die API konnte nicht erreicht werden. ÃœberprÃ¼fe deine Endpoint-URL.</string>
+    <string name="error_bad_request">Anfrage fehlgeschlagen. ÃœberprÃ¼fe deine Einstellungen.</string>
 
     <!-- Updates -->
     <string name="update_channel_name">App-Updates</string>
-    <string name="update_channel_desc">Benachrichtigt, wenn eine neue Version von SwiftSlate verfügbar ist</string>
-    <string name="update_available_title">SwiftSlate-Update verfügbar</string>
+    <string name="update_channel_desc">Benachrichtigt, wenn eine neue Version von Ghostwriter verfÃ¼gbar ist</string>
+    <string name="update_available_title">Ghostwriter-Update verfÃ¼gbar</string>
     <string name="update_available_text">Tippe, um die neueste Version anzuzeigen</string>
 
     <!-- Command descriptions -->
-    <string name="error_input_too_long">Der Text ist zu lang für das Token-Limit pro Minute dieses Modells. Versuche es mit kürzerem Text erneut.</string>
-    <string name="note_response_truncated">[Hinweis: Antwort ist möglicherweise abgeschnitten]</string>
-    <string name="error_provider_auth_required">Der Endpunkt hat die Anfrage abgelehnt. Bei einem Cloud-Server melde dich auf dem Server selbst an (z. B. „ollama signin“).</string>
-    <string name="keys_endpoint_needs_v1">Der Endpunkt ist erreichbar, aber die URL sollte mit /v1 enden (z. B. http://host:11434/v1).</string>
-    <string name="settings_fetch_models">Modelle abrufen</string>
-    <string name="settings_fetch_models_loading">Wird abgerufen…</string>
+    <string name="error_input_too_long">Der Text ist zu lang fÃ¼r das Token-Limit pro Minute dieses Modells. Versuche es mit kÃ¼rzerem Text erneut.</string>
+    <string name="note_response_truncated">[Hinweis: Antwort ist mÃ¶glicherweise abgeschnitten]</string>
+    <string name="error_provider_auth_required">Der Endpunkt hat die Anfrage abgelehnt. Bei einem Cloud-Server melde dich auf dem Server selbst an (z. B. â€žollama signinâ€œ).</string>    <string name="settings_fetch_models">Modelle abrufen</string>
+    <string name="settings_fetch_models_loading">Wird abgerufenâ€¦</string>
     <string name="settings_fetch_models_success">%1$d Modelle geladen</string>
     <string name="settings_fetch_models_empty">Keine Modelle gefunden. Du kannst ein Modell trotzdem manuell eingeben.</string>
-    <string name="settings_fetch_models_failed">Modelle konnten nicht abgerufen werden. Prüfe die Adresse und den API-Schlüssel.</string>
+    <string name="settings_fetch_models_failed">Modelle konnten nicht abgerufen werden. PrÃ¼fe die Adresse und den API-SchlÃ¼ssel.</string>
     <string name="settings_models_refresh">Aktualisieren</string>
-    <string name="settings_models_need_key">Füge oben einen API-Schlüssel hinzu, um die Modellliste zu laden.</string>
-    <string name="settings_models_load_failed">Modelle konnten nicht geladen werden. Prüfe Verbindung und API-Schlüssel.</string>
-    <string name="settings_models_empty_provider">Für diesen API-Schlüssel sind keine Modelle verfügbar.</string>
-    <string name="dashboard_service_killed_title">SwiftSlate wurde unterbrochen</string>
+    <string name="settings_models_need_key">FÃ¼ge oben einen API-SchlÃ¼ssel hinzu, um die Modellliste zu laden.</string>
+    <string name="settings_models_load_failed">Modelle konnten nicht geladen werden. PrÃ¼fe Verbindung und API-SchlÃ¼ssel.</string>
+    <string name="settings_models_empty_provider">FÃ¼r diesen API-SchlÃ¼ssel sind keine Modelle verfÃ¼gbar.</string>
+    <string name="dashboard_service_killed_title">Ghostwriter wurde unterbrochen</string>
     <string name="dashboard_service_killed_message">Der Hintergrunddienst wurde unerwartet beendet. Aktiviere ihn in den Bedienungshilfen erneut, um Befehle weiter zu verwenden.</string>
-    <string name="dashboard_service_killed_dismiss">Schließen</string>
+    <string name="dashboard_service_killed_dismiss">SchlieÃŸen</string>
 </resources>

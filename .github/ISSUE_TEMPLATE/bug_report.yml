@@ -1,5 +1,5 @@
 name: Bug Report
-description: Something isn't working as expected in SwiftSlate
+description: Something isn't working as expected in Ghostwriter
 labels: ["bug"]
 body:
   - type: markdown
@@ -66,7 +66,7 @@ body:
   - type: input
     id: app-version
     attributes:
-      label: SwiftSlate version
+      label: Ghostwriter version
       placeholder: "e.g., v1.4.0"
     validations:
       required: true

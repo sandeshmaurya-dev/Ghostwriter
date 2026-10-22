@@ -1,57 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SwiftSlate</string>
-    <string name="accessibility_service_label">SwiftSlate-assistent</string>
-    <string name="accessibility_service_desc">Ersätter text med hjälp av AI i hela systemet när du skriver utlösarkommandon.</string>
+    <string name="app_name">Ghostwriter</string>
+    <string name="accessibility_service_label">Ghostwriter-assistent</string>
+    <string name="accessibility_service_desc">ErsÃ¤tter text med hjÃ¤lp av AI i hela systemet nÃ¤r du skriver utlÃ¶sarkommandon.</string>
 
     <!-- Dashboard -->
-    <string name="dashboard_title">Översikt</string>
+    <string name="dashboard_title">Ã–versikt</string>
     <string name="service_status_active">Aktiv</string>
     <string name="service_status_inactive">Inaktiv</string>
     <string name="service_enable">Aktivera</string>
-    <string name="dashboard_api_keys_title">API-nycklar</string>
-    <string name="dashboard_keys_configured">Konfigurerade nycklar: %1$d</string>
-    <string name="dashboard_add_key_hint">Lägg till en API-nyckel för att komma igång.</string>
-    <string name="dashboard_monthly_requests">Den här månaden</string>
+    <string name="dashboard_monthly_requests">Den hÃ¤r mÃ¥naden</string>
     <string name="dashboard_favorite_command">Vanligaste kommandot</string>
-    <string name="dashboard_no_data">—</string>
+    <string name="dashboard_no_data">â€”</string>
     <string name="dashboard_last_7_days">Senaste 7 dagarna</string>
 
     <!-- Keys -->
-    <string name="keys_title">API-nycklar</string>
-    <string name="keys_api_key_label">API-nyckel</string>
-    <string name="keys_testing">Testar…</string>
-    <string name="keys_add_key">Lägg till nyckel</string>
-    <string name="keys_valid_added">Giltig nyckel har lagts till!</string>
-    <string name="keys_already_added">Den här nyckeln har redan lagts till</string>
-    <string name="keys_validation_failed">Valideringen misslyckades</string>
-    <string name="keys_keystore_error">Säker nyckellagring är inte tillgänglig på den här enheten. Nycklar kan inte sparas.</string>
-    <string name="keys_custom_endpoint_required">Ange slutpunktsadressen i Inställningar innan du lägger till en nyckel för den anpassade leverantören</string>
-    <string name="keys_get_api_key">Hämta din API-nyckel för %1$s ↗</string>
-    <string name="keys_empty">Inga API-nycklar har lagts till</string>
+    <string name="keys_keystore_error">SÃ¤ker nyckellagring Ã¤r inte tillgÃ¤nglig pÃ¥ den hÃ¤r enheten. Nycklar kan inte sparas.</string>
 
     <!-- Commands -->
     <string name="commands_title">Kommandon</string>
-    <string name="commands_add_custom_title">Lägg till anpassat kommando</string>
-    <string name="commands_trigger_label">Utlösare (t.ex. %1$skod)</string>
+    <string name="commands_add_custom_title">LÃ¤gg till anpassat kommando</string>
+    <string name="commands_trigger_label">UtlÃ¶sare (t.ex. %1$skod)</string>
     <string name="commands_prompt_label">Prompt (t.ex. Skriv om som en dikt)</string>
-    <string name="commands_add_command">Lägg till kommando</string>
+    <string name="commands_add_command">LÃ¤gg till kommando</string>
     <string name="commands_delete_command">Ta bort</string>
     <string name="commands_edit_command">Redigera</string>
     <string name="commands_save_command">Spara kommando</string>
     <string name="commands_cancel">Avbryt</string>
     <string name="commands_type_ai">AI</string>
     <string name="commands_type_replacer">Lokalt</string>
-    <string name="commands_replacement_label">Ersättningstext (t.ex. minadress@example.com)</string>
+    <string name="commands_replacement_label">ErsÃ¤ttningstext (t.ex. minadress@example.com)</string>
     <string name="commands_built_in">Inbyggda</string>
-    <string name="commands_error_prefix">Utlösaren måste börja med \'%1$s\'</string>
-    <string name="commands_error_duplicate">Det finns redan ett kommando med den här utlösaren</string>
-    <string name="commands_error_conflict">Krockar med det befintliga kommandot \'%1$s\' — den ena utlösaren är ett prefix till den andra</string>
-    <string name="commands_error_empty_trigger">Utlösaren måste ha ett namn efter prefixet</string>
+    <string name="commands_error_prefix">UtlÃ¶saren mÃ¥ste bÃ¶rja med \'%1$s\'</string>
+    <string name="commands_error_duplicate">Det finns redan ett kommando med den hÃ¤r utlÃ¶saren</string>
+    <string name="commands_error_conflict">Krockar med det befintliga kommandot \'%1$s\' â€” den ena utlÃ¶saren Ã¤r ett prefix till den andra</string>
+    <string name="commands_error_empty_trigger">UtlÃ¶saren mÃ¥ste ha ett namn efter prefixet</string>
 
     <!-- Settings -->
-    <string name="settings_title">Inställningar</string>
-    <string name="settings_provider_title">Modellleverantör</string>
+    <string name="settings_title">InstÃ¤llningar</string>
+    <string name="settings_provider_title">ModellleverantÃ¶r</string>
     <string name="settings_provider_gemini">Google Gemini</string>
     <string name="settings_provider_groq">Groq</string>
     <string name="settings_provider_custom">Anpassad (OpenAI-kompatibel)</string>
@@ -60,12 +47,12 @@
     <string name="settings_endpoint_title">Slutpunkt</string>
     <string name="settings_endpoint_placeholder">https://api.example.com/v1</string>
     <string name="settings_model_placeholder">gpt-4o, claude-3-haiku osv.</string>
-    <string name="settings_trigger_prefix_desc">Symbol som används före kommandonamn (t.ex. %1$sfix).</string>
-    <string name="settings_prefix_error_length">Måste vara exakt 1 tecken</string>
-    <string name="settings_prefix_error_whitespace">Får inte vara ett blanksteg</string>
-    <string name="settings_prefix_error_alphanumeric">Får inte vara en bokstav eller siffra</string>
-    <string name="settings_endpoint_error_scheme">Måste börja med https://</string>
-    <string name="settings_endpoint_error_spaces">Webbadressen får inte innehålla blanksteg</string>
+    <string name="settings_trigger_prefix_desc">Symbol som anvÃ¤nds fÃ¶re kommandonamn (t.ex. %1$sfix).</string>
+    <string name="settings_prefix_error_length">MÃ¥ste vara exakt 1 tecken</string>
+    <string name="settings_prefix_error_whitespace">FÃ¥r inte vara ett blanksteg</string>
+    <string name="settings_prefix_error_alphanumeric">FÃ¥r inte vara en bokstav eller siffra</string>
+    <string name="settings_endpoint_error_scheme">MÃ¥ste bÃ¶rja med https://</string>
+    <string name="settings_endpoint_error_spaces">Webbadressen fÃ¥r inte innehÃ¥lla blanksteg</string>
 
     <!-- Backup -->
     <string name="backup_desc">Exportera eller importera dina kommandon som en JSON-fil.</string>
@@ -74,83 +61,81 @@
     <string name="backup_export_success">Kommandona har exporterats</string>
     <string name="backup_export_error">Exporten misslyckades</string>
     <string name="backup_import_success">Kommandona har importerats</string>
-    <string name="backup_import_error">Ogiltig säkerhetskopia</string>
-    <string name="backup_import_confirm">Det här ersätter alla dina befintliga anpassade kommandon. Vill du fortsätta?</string>
+    <string name="backup_import_error">Ogiltig sÃ¤kerhetskopia</string>
+    <string name="backup_import_confirm">Det hÃ¤r ersÃ¤tter alla dina befintliga anpassade kommandon. Vill du fortsÃ¤tta?</string>
     <string name="backup_import_cancel">Avbryt</string>
-    <string name="settings_check_updates">Sök efter uppdateringar</string>
-    <string name="settings_made_by">Skapad med kärlek av Musheer Alam</string>
-    <string name="settings_sponsor">Sponsra på GitHub</string>
-    <string name="commands_collapse">Dölj</string>
+    <string name="settings_check_updates">SÃ¶k efter uppdateringar</string>
+    <string name="settings_made_by">Skapad med kÃ¤rlek av Sandesh Maurya</string>
+    <string name="settings_sponsor">Sponsra pÃ¥ GitHub</string>
+    <string name="commands_collapse">DÃ¶lj</string>
     <string name="commands_expand">Visa</string>
-    <string name="commands_search_hint">Sök bland kommandon…</string>
-    <string name="commands_search_close">Stäng sökning</string>
+    <string name="commands_search_hint">SÃ¶k bland kommandonâ€¦</string>
+    <string name="commands_search_close">StÃ¤ng sÃ¶kning</string>
     <string name="commands_search_empty">Inga kommandon hittades</string>
 
     <!-- Delete confirmation -->
-    <string name="delete_confirm_command_title">Ta bort det här kommandot?</string>
-    <string name="delete_confirm_key_title">Ta bort den här API-nyckeln?</string>
-    <string name="delete_confirm_message">Åtgärden kan inte ångras.</string>
+    <string name="delete_confirm_command_title">Ta bort det hÃ¤r kommandot?</string>
+    <string name="delete_confirm_key_title">Ta bort den hÃ¤r API-nyckeln?</string>
+    <string name="delete_confirm_message">Ã…tgÃ¤rden kan inte Ã¥ngras.</string>
     <string name="delete_confirm_button">Ta bort</string>
 
     <!-- Runtime toasts (accessibility service) -->
-    <string name="toast_replace_failed">Det gick inte att ersätta texten</string>
-    <string name="toast_custom_not_configured">Den anpassade leverantören är inte konfigurerad. Ange slutpunkt och modell i Inställningar.</string>
-    <string name="toast_key_rate_limited">API-nyckelns anropsgräns har nåtts. Försök igen om %1$d s</string>
+    <string name="toast_replace_failed">Det gick inte att ersÃ¤tta texten</string>
+    <string name="toast_custom_not_configured">Den anpassade leverantÃ¶ren Ã¤r inte konfigurerad. Ange slutpunkt och modell i InstÃ¤llningar.</string>
+    <string name="toast_key_rate_limited">API-nyckelns anropsgrÃ¤ns har nÃ¥tts. FÃ¶rsÃ¶k igen om %1$d s</string>
     <string name="toast_no_keys">Inga API-nycklar har konfigurerats</string>
-    <string name="toast_all_keys_invalid">Alla API-nycklar är ogiltiga. Kontrollera dina nycklar</string>
-    <string name="toast_request_timed_out">Tidsgränsen för begäran överskreds</string>
+    <string name="toast_all_keys_invalid">Alla API-nycklar Ã¤r ogiltiga. Kontrollera dina nycklar</string>
+    <string name="toast_request_timed_out">TidsgrÃ¤nsen fÃ¶r begÃ¤ran Ã¶verskreds</string>
 
     <!-- Text-selection (PROCESS_TEXT) flow -->
-    <string name="process_text_title">Tillämpa ett kommando</string>
-    <string name="process_text_replace">Ersätt</string>
+    <string name="process_text_title">TillÃ¤mpa ett kommando</string>
+    <string name="process_text_replace">ErsÃ¤tt</string>
     <string name="process_text_copy">Kopiera</string>
     <string name="process_text_back">Tillbaka</string>
-    <string name="process_text_retry">Försök igen</string>
+    <string name="process_text_retry">FÃ¶rsÃ¶k igen</string>
     <string name="process_text_copied">Kopierat</string>
     <string name="process_text_no_selection">Ingen text har markerats</string>
-    <string name="process_text_no_commands">Inga kommandon är tillgängliga. Lägg till ett i SwiftSlate.</string>
-    <string name="toast_restore_failed">Det gick inte att återställa originaltexten</string>
-    <string name="toast_nothing_to_undo">Det finns inget att ångra</string>
-    <string name="toast_undo_failed">Det gick inte att ångra</string>
+    <string name="process_text_no_commands">Inga kommandon Ã¤r tillgÃ¤ngliga. LÃ¤gg till ett i Ghostwriter.</string>
+    <string name="toast_restore_failed">Det gick inte att Ã¥terstÃ¤lla originaltexten</string>
+    <string name="toast_nothing_to_undo">Det finns inget att Ã¥ngra</string>
+    <string name="toast_undo_failed">Det gick inte att Ã¥ngra</string>
     <string name="toast_nothing_to_copy">Det finns inget att kopiera</string>
     <string name="toast_copied">Kopierat till urklipp</string>
     <string name="toast_nothing_to_cut">Det finns inget att klippa ut</string>
     <string name="toast_cut">Texten har klippts ut till urklipp</string>
-    <string name="toast_clipboard_empty">Urklipp är tomt</string>
-    <string name="toast_clipboard_failed">Urklippsåtgärden misslyckades</string>
+    <string name="toast_clipboard_empty">Urklipp Ã¤r tomt</string>
+    <string name="toast_clipboard_failed">UrklippsÃ¥tgÃ¤rden misslyckades</string>
 
     <!-- Runtime error messages (accessibility service) -->
-    <string name="error_no_model_access">Din API-nyckel har inte åtkomst till den här modellen.</string>
-    <string name="error_invalid_key">Ogiltig API-nyckel. Kontrollera nyckeln i Inställningar.</string>
-    <string name="error_invalid_key_with_hint">Ogiltig API-nyckel (%1$s). Kontrollera dina nycklar i Inställningar.</string>
-    <string name="error_rate_limited">Anropsgränsen har nåtts. Försök igen om en stund.</string>
-    <string name="error_model_not_found">Modellen hittades inte. Kontrollera modellvalet i Inställningar.</string>
-    <string name="error_safety_blocked">Svaret blockerades av säkerhetsfilter. Försök formulera om texten.</string>
-    <string name="error_empty_response">Modellen returnerade ett tomt svar. Försök igen.</string>
-    <string name="error_timeout_connection">Tidsgränsen för begäran överskreds. Kontrollera anslutningen.</string>
+    <string name="error_no_model_access">Din API-nyckel har inte Ã¥tkomst till den hÃ¤r modellen.</string>
+    <string name="error_invalid_key">Ogiltig API-nyckel. Kontrollera nyckeln i InstÃ¤llningar.</string>
+    <string name="error_invalid_key_with_hint">Ogiltig API-nyckel (%1$s). Kontrollera dina nycklar i InstÃ¤llningar.</string>
+    <string name="error_rate_limited">AnropsgrÃ¤nsen har nÃ¥tts. FÃ¶rsÃ¶k igen om en stund.</string>
+    <string name="error_model_not_found">Modellen hittades inte. Kontrollera modellvalet i InstÃ¤llningar.</string>
+    <string name="error_safety_blocked">Svaret blockerades av sÃ¤kerhetsfilter. FÃ¶rsÃ¶k formulera om texten.</string>
+    <string name="error_empty_response">Modellen returnerade ett tomt svar. FÃ¶rsÃ¶k igen.</string>
+    <string name="error_timeout_connection">TidsgrÃ¤nsen fÃ¶r begÃ¤ran Ã¶verskreds. Kontrollera anslutningen.</string>
     <string name="error_no_internet">Ingen internetanslutning.</string>
-    <string name="error_endpoint_unreachable">Det gick inte att nå API:et. Kontrollera slutpunktsadressen.</string>
-    <string name="error_bad_request">Begäran misslyckades. Kontrollera inställningarna.</string>
-    <string name="error_input_too_long">Texten är för lång för modellens tokenbegränsning per minut. Försök igen med en kortare text.</string>
+    <string name="error_endpoint_unreachable">Det gick inte att nÃ¥ API:et. Kontrollera slutpunktsadressen.</string>
+    <string name="error_bad_request">BegÃ¤ran misslyckades. Kontrollera instÃ¤llningarna.</string>
+    <string name="error_input_too_long">Texten Ã¤r fÃ¶r lÃ¥ng fÃ¶r modellens tokenbegrÃ¤nsning per minut. FÃ¶rsÃ¶k igen med en kortare text.</string>
     <string name="note_response_truncated">[Obs! Svaret kan vara avkortat]</string>
     <!-- Update notification (worker) -->
     <string name="update_channel_name">Appuppdateringar</string>
-    <string name="update_channel_desc">Meddelar när en ny version av SwiftSlate är tillgänglig</string>
-    <string name="update_available_title">SwiftSlate-uppdatering tillgänglig</string>
-    <string name="update_available_text">Tryck för att visa den senaste versionen</string>
+    <string name="update_channel_desc">Meddelar nÃ¤r en ny version av Ghostwriter Ã¤r tillgÃ¤nglig</string>
+    <string name="update_available_title">Ghostwriter-uppdatering tillgÃ¤nglig</string>
+    <string name="update_available_text">Tryck fÃ¶r att visa den senaste versionen</string>
 
-    <string name="error_provider_auth_required">Din slutpunkt avvisade begäran. Om det är en molnbaserad server, logga in på själva servern (t.ex. `ollama signin`).</string>
-    <string name="keys_endpoint_needs_v1">Slutpunkten är nåbar, men webbadressen ska sluta med /v1 (t.ex. http://host:11434/v1).</string>
-    <string name="settings_fetch_models">Hämta modeller</string>
-    <string name="settings_fetch_models_loading">Hämtar…</string>
-    <string name="settings_fetch_models_success">%1$d modeller inlästa</string>
+    <string name="error_provider_auth_required">Din slutpunkt avvisade begÃ¤ran. Om det Ã¤r en molnbaserad server, logga in pÃ¥ sjÃ¤lva servern (t.ex. `ollama signin`).</string>    <string name="settings_fetch_models">HÃ¤mta modeller</string>
+    <string name="settings_fetch_models_loading">HÃ¤mtarâ€¦</string>
+    <string name="settings_fetch_models_success">%1$d modeller inlÃ¤sta</string>
     <string name="settings_fetch_models_empty">Inga modeller hittades. Du kan fortfarande ange en modell manuellt.</string>
-    <string name="settings_fetch_models_failed">Det gick inte att hämta modeller. Kontrollera slutpunkten och API-nyckeln.</string>
+    <string name="settings_fetch_models_failed">Det gick inte att hÃ¤mta modeller. Kontrollera slutpunkten och API-nyckeln.</string>
     <string name="settings_models_refresh">Uppdatera</string>
-    <string name="settings_models_need_key">Lägg till en API-nyckel ovan för att läsa in modellistan.</string>
-    <string name="settings_models_load_failed">Det gick inte att läsa in modeller. Kontrollera anslutningen och API-nyckeln.</string>
-    <string name="settings_models_empty_provider">Inga modeller är tillgängliga för den här API-nyckeln.</string>
-    <string name="dashboard_service_killed_title">SwiftSlate avbröts</string>
-    <string name="dashboard_service_killed_message">Bakgrundstjänsten stoppades oväntat. Aktivera den igen i tillgänglighetsinställningarna för att fortsätta använda kommandon.</string>
-    <string name="dashboard_service_killed_dismiss">Avfärda</string>
+    <string name="settings_models_need_key">LÃ¤gg till en API-nyckel ovan fÃ¶r att lÃ¤sa in modellistan.</string>
+    <string name="settings_models_load_failed">Det gick inte att lÃ¤sa in modeller. Kontrollera anslutningen och API-nyckeln.</string>
+    <string name="settings_models_empty_provider">Inga modeller Ã¤r tillgÃ¤ngliga fÃ¶r den hÃ¤r API-nyckeln.</string>
+    <string name="dashboard_service_killed_title">Ghostwriter avbrÃ¶ts</string>
+    <string name="dashboard_service_killed_message">BakgrundstjÃ¤nsten stoppades ovÃ¤ntat. Aktivera den igen i tillgÃ¤nglighetsinstÃ¤llningarna fÃ¶r att fortsÃ¤tta anvÃ¤nda kommandon.</string>
+    <string name="dashboard_service_killed_dismiss">AvfÃ¤rda</string>
 </resources>

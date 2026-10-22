@@ -1,104 +1,91 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SwiftSlate</string>
-    <string name="accessibility_service_label">Pomočnik SwiftSlate</string>
-    <string name="accessibility_service_desc">Zagotavlja sistemske zamenjave besedila z umetno inteligenco, ko vnesete sprožilne ukaze.</string>
+    <string name="app_name">Ghostwriter</string>
+    <string name="accessibility_service_label">PomoÄnik Ghostwriter</string>
+    <string name="accessibility_service_desc">Zagotavlja sistemske zamenjave besedila z umetno inteligenco, ko vnesete sproÅ¾ilne ukaze.</string>
 
     <!-- Dashboard -->
-    <string name="dashboard_title">Nadzorna plošča</string>
+    <string name="dashboard_title">Nadzorna ploÅ¡Äa</string>
     <string name="service_status_active">Aktiven</string>
     <string name="service_status_inactive">Neaktiven</string>
-    <string name="service_enable">Omogoči</string>
-    <string name="dashboard_api_keys_title">Ključi API</string>
-    <string name="dashboard_keys_configured">%1$d konfiguriranih ključev</string>
-    <string name="dashboard_add_key_hint">Dodajte ključ API za začetek.</string>
+    <string name="service_enable">OmogoÄi</string>
     <string name="dashboard_monthly_requests">Ta mesec</string>
-    <string name="dashboard_favorite_command">Najpogostejši ukaz</string>
-    <string name="dashboard_no_data">—</string>
+    <string name="dashboard_favorite_command">NajpogostejÅ¡i ukaz</string>
+    <string name="dashboard_no_data">â€”</string>
     <string name="dashboard_last_7_days">Zadnjih 7 dni</string>
 
     <!-- Keys -->
-    <string name="keys_title">Ključi API</string>
-    <string name="keys_api_key_label">Ključ API</string>
-    <string name="keys_testing">Preizkušanje…</string>
-    <string name="keys_add_key">Dodaj ključ</string>
-    <string name="keys_valid_added">Dodan je veljaven ključ!</string>
-    <string name="keys_already_added">Ta ključ je že bil dodan</string>
-    <string name="keys_validation_failed">Preverjanje ni uspelo</string>
-    <string name="keys_keystore_error">Varna hramba ključev na tej napravi ni na voljo. Ključev ni mogoče shraniti.</string>
-    <string name="keys_custom_endpoint_required">Set the endpoint URL in Settings before adding a key for the Custom provider</string>
-    <string name="keys_get_api_key">Pridobite svoj ključ API za %1$s ↗</string>
-    <string name="keys_empty">Ni dodanih ključev API</string>
+    <string name="keys_keystore_error">Varna hramba kljuÄev na tej napravi ni na voljo. KljuÄev ni mogoÄe shraniti.</string>
 
     <!-- Commands -->
     <string name="commands_title">Ukazi</string>
     <string name="commands_add_custom_title">Dodaj poljuben ukaz</string>
-    <string name="commands_trigger_label">Sprožilec (npr. %1$scode)</string>
-    <string name="commands_prompt_label">Poziv (npr. Prepiši kot pesem)</string>
+    <string name="commands_trigger_label">SproÅ¾ilec (npr. %1$scode)</string>
+    <string name="commands_prompt_label">Poziv (npr. PrepiÅ¡i kot pesem)</string>
     <string name="commands_add_command">Dodaj ukaz</string>
-    <string name="commands_delete_command">Izbriši</string>
+    <string name="commands_delete_command">IzbriÅ¡i</string>
     <string name="commands_edit_command">Uredi</string>
     <string name="commands_save_command">Shrani ukaz</string>
-    <string name="commands_cancel">Prekliči</string>
+    <string name="commands_cancel">PrekliÄi</string>
     <string name="commands_type_ai">AI</string>
     <string name="commands_type_replacer">Lokalno</string>
     <string name="commands_replacement_label">Nadomestno besedilo (npr. myemail@example.com)</string>
     <string name="commands_built_in">Vgrajeno</string>
-    <string name="commands_error_prefix">Sprožilec se mora začeti z \'%1$s\'</string>
-    <string name="commands_error_duplicate">Ukaz s tem sprožilcem že obstaja</string>
-    <string name="commands_error_conflict">Konflikt z obstoječim ukazom \'%1$s\' — en sprožilec je predpona drugega</string>
-    <string name="commands_error_empty_trigger">Sprožilec mora imeti ime za predpono</string>
+    <string name="commands_error_prefix">SproÅ¾ilec se mora zaÄeti z \'%1$s\'</string>
+    <string name="commands_error_duplicate">Ukaz s tem sproÅ¾ilcem Å¾e obstaja</string>
+    <string name="commands_error_conflict">Konflikt z obstojeÄim ukazom \'%1$s\' â€” en sproÅ¾ilec je predpona drugega</string>
+    <string name="commands_error_empty_trigger">SproÅ¾ilec mora imeti ime za predpono</string>
 
     <!-- Settings -->
     <string name="settings_title">Nastavitve</string>
     <string name="settings_provider_title">Ponudnik modela</string>
     <string name="settings_provider_gemini">Google Gemini</string>
     <string name="settings_provider_groq">Groq</string>
-    <string name="settings_provider_custom">Poljubno (združljivo z OpenAI)</string>
+    <string name="settings_provider_custom">Poljubno (zdruÅ¾ljivo z OpenAI)</string>
     <string name="settings_model_title">Model</string>
     <string name="settings_temperature_title">Temperatura</string>
-    <string name="settings_endpoint_title">Končna točka</string>
+    <string name="settings_endpoint_title">KonÄna toÄka</string>
     <string name="settings_endpoint_placeholder">https://api.example.com/v1</string>
     <string name="settings_model_placeholder">gpt-4o, claude-3-haiku, itd.</string>
     <string name="settings_trigger_prefix_desc">Simbol, uporabljen pred imeni ukazov (npr. %1$sfix).</string>
     <string name="settings_prefix_error_length">Mora biti natanko 1 znak</string>
     <string name="settings_prefix_error_whitespace">Ne sme biti presledek</string>
-    <string name="settings_prefix_error_alphanumeric">Ne sme biti črka ali številka</string>
-    <string name="settings_endpoint_error_scheme">Mora se začeti z https://</string>
+    <string name="settings_prefix_error_alphanumeric">Ne sme biti Ärka ali Å¡tevilka</string>
+    <string name="settings_endpoint_error_scheme">Mora se zaÄeti z https://</string>
     <string name="settings_endpoint_error_spaces">URL ne sme vsebovati presledkov</string>
 
     <!-- Backup -->
     <string name="backup_desc">Izvozi ali uvozi svoje ukaze kot datoteko JSON.</string>
     <string name="backup_export">Izvozi</string>
     <string name="backup_import">Uvozi</string>
-    <string name="backup_export_success">Ukazi so bili uspešno izvoženi</string>
+    <string name="backup_export_success">Ukazi so bili uspeÅ¡no izvoÅ¾eni</string>
     <string name="backup_export_error">Izvoz ni uspel</string>
-    <string name="backup_import_success">Ukazi so bili uspešno uvoženi</string>
+    <string name="backup_import_success">Ukazi so bili uspeÅ¡no uvoÅ¾eni</string>
     <string name="backup_import_error">Neveljavna varnostna kopija</string>
-    <string name="backup_import_confirm">To bo nadomestilo vse vaše obstoječe poljubne ukaze. Nadaljujem?</string>
-    <string name="backup_import_cancel">Prekliči</string>
+    <string name="backup_import_confirm">To bo nadomestilo vse vaÅ¡e obstojeÄe poljubne ukaze. Nadaljujem?</string>
+    <string name="backup_import_cancel">PrekliÄi</string>
     <string name="settings_check_updates">Preveri posodobitve</string>
-    <string name="settings_made_by">Narejeno z ljubeznijo Musheer Alam</string>
+    <string name="settings_made_by">Narejeno z ljubeznijo Sandesh Maurya</string>
     <string name="settings_sponsor">Sponzoriraj na GitHubu</string>
     <string name="commands_collapse">Strni</string>
-    <string name="commands_expand">Razširi</string>
-    <string name="commands_search_hint">Išči ukaze…</string>
+    <string name="commands_expand">RazÅ¡iri</string>
+    <string name="commands_search_hint">IÅ¡Äi ukazeâ€¦</string>
     <string name="commands_search_close">Zapri iskanje</string>
     <string name="commands_search_empty">Ni najdenih ukazov</string>
 
     <!-- Delete confirmation -->
-    <string name="delete_confirm_command_title">Izbrišem ta ukaz?</string>
-    <string name="delete_confirm_key_title">Izbrišem ta ključ API?</string>
-    <string name="delete_confirm_message">Tega dejanja ni mogoče razveljaviti.</string>
-    <string name="delete_confirm_button">Izbriši</string>
+    <string name="delete_confirm_command_title">IzbriÅ¡em ta ukaz?</string>
+    <string name="delete_confirm_key_title">IzbriÅ¡em ta kljuÄ API?</string>
+    <string name="delete_confirm_message">Tega dejanja ni mogoÄe razveljaviti.</string>
+    <string name="delete_confirm_button">IzbriÅ¡i</string>
 
     <!-- Toast & error messages -->
-    <string name="toast_replace_failed">Besedila ni bilo mogoče zamenjati</string>
-    <string name="toast_custom_not_configured">Poljuben ponudnik ni konfiguriran. Nastavite končno točko in model v Nastavitvah.</string>
-    <string name="toast_key_rate_limited">Presežena omejitev zahtevkov ključa API. Poskusite znova čez %1$d s</string>
-    <string name="toast_no_keys">Ni konfiguriranih ključev API</string>
-    <string name="toast_all_keys_invalid">Vsi ključi API so neveljavni. Preverite svoje ključe</string>
-    <string name="toast_request_timed_out">Časovna omejitev zahteve je potekla</string>
+    <string name="toast_replace_failed">Besedila ni bilo mogoÄe zamenjati</string>
+    <string name="toast_custom_not_configured">Poljuben ponudnik ni konfiguriran. Nastavite konÄno toÄko in model v Nastavitvah.</string>
+    <string name="toast_key_rate_limited">PreseÅ¾ena omejitev zahtevkov kljuÄa API. Poskusite znova Äez %1$d s</string>
+    <string name="toast_no_keys">Ni konfiguriranih kljuÄev API</string>
+    <string name="toast_all_keys_invalid">Vsi kljuÄi API so neveljavni. Preverite svoje kljuÄe</string>
+    <string name="toast_request_timed_out">ÄŒasovna omejitev zahteve je potekla</string>
     <string name="process_text_title">Uporabi ukaz</string>
     <string name="process_text_replace">Zamenjaj</string>
     <string name="process_text_copy">Kopiraj</string>
@@ -106,47 +93,45 @@
     <string name="process_text_retry">Poskusi znova</string>
     <string name="process_text_copied">Kopirano</string>
     <string name="process_text_no_selection">Besedilo ni izbrano</string>
-    <string name="process_text_no_commands">Ni razpoložljivih ukazov. Dodajte enega v SwiftSlate.</string>
-    <string name="toast_restore_failed">Izvirnega besedila ni bilo mogoče obnoviti</string>
-    <string name="toast_nothing_to_undo">Ni ničesar za razveljavitev</string>
+    <string name="process_text_no_commands">Ni razpoloÅ¾ljivih ukazov. Dodajte enega v Ghostwriter.</string>
+    <string name="toast_restore_failed">Izvirnega besedila ni bilo mogoÄe obnoviti</string>
+    <string name="toast_nothing_to_undo">Ni niÄesar za razveljavitev</string>
     <string name="toast_undo_failed">Razveljavitev ni uspela</string>
-    <string name="toast_nothing_to_copy">Ni ničesar za kopiranje</string>
-    <string name="toast_copied">Kopirano v odložišče</string>
-    <string name="toast_nothing_to_cut">Ni ničesar za izrez</string>
-    <string name="toast_cut">Izrezano v odložišče</string>
-    <string name="toast_clipboard_empty">Odložišče je prazno</string>
-    <string name="toast_clipboard_failed">Operacija odložišča ni uspela</string>
-    <string name="error_no_model_access">Vaš ključ API nima dostopa do tega modela.</string>
-    <string name="error_invalid_key">Neveljaven ključ API. Preverite svoj ključ v Nastavitvah.</string>
+    <string name="toast_nothing_to_copy">Ni niÄesar za kopiranje</string>
+    <string name="toast_copied">Kopirano v odloÅ¾iÅ¡Äe</string>
+    <string name="toast_nothing_to_cut">Ni niÄesar za izrez</string>
+    <string name="toast_cut">Izrezano v odloÅ¾iÅ¡Äe</string>
+    <string name="toast_clipboard_empty">OdloÅ¾iÅ¡Äe je prazno</string>
+    <string name="toast_clipboard_failed">Operacija odloÅ¾iÅ¡Äa ni uspela</string>
+    <string name="error_no_model_access">VaÅ¡ kljuÄ API nima dostopa do tega modela.</string>
+    <string name="error_invalid_key">Neveljaven kljuÄ API. Preverite svoj kljuÄ v Nastavitvah.</string>
     <string name="error_invalid_key_with_hint">Invalid API key (%1$s). Please check your keys in Settings.</string>
-    <string name="error_rate_limited">Presežena omejitev zahtevkov. Poskusite znova čez trenutek.</string>
-    <string name="error_model_not_found">Modela ni mogoče najti. Preverite izbiro modela v Nastavitvah.</string>
+    <string name="error_rate_limited">PreseÅ¾ena omejitev zahtevkov. Poskusite znova Äez trenutek.</string>
+    <string name="error_model_not_found">Modela ni mogoÄe najti. Preverite izbiro modela v Nastavitvah.</string>
     <string name="error_safety_blocked">Odgovor je blokiran zaradi varnostnih filtrov. Poskusite preoblikovati.</string>
     <string name="error_empty_response">Model je vrnil prazen odgovor. Poskusite znova.</string>
-    <string name="error_timeout_connection">Časovna omejitev zahteve je potekla. Preverite povezavo.</string>
+    <string name="error_timeout_connection">ÄŒasovna omejitev zahteve je potekla. Preverite povezavo.</string>
     <string name="error_no_internet">Ni internetne povezave.</string>
-    <string name="error_endpoint_unreachable">Do API-ja ni bilo mogoče dostopati. Preverite URL končne točke.</string>
+    <string name="error_endpoint_unreachable">Do API-ja ni bilo mogoÄe dostopati. Preverite URL konÄne toÄke.</string>
     <string name="error_bad_request">Zahteva ni uspela. Preverite svoje nastavitve.</string>
 
     <!-- Updates & command descriptions -->
     <string name="update_channel_name">Posodobitve aplikacije</string>
-    <string name="update_channel_desc">Obvesti, ko je na voljo nova različica SwiftSlate</string>
-    <string name="update_available_title">Na voljo je posodobitev SwiftSlate</string>
-    <string name="update_available_text">Tapnite za ogled najnovejše različice</string>
-    <string name="error_input_too_long">Besedilo je predolgo za omejitev žetonov na minuto tega modela. Poskusite znova s krajšim besedilom.</string>
-    <string name="note_response_truncated">[Opomba: odgovor je morda skrajšan]</string>
-    <string name="error_provider_auth_required">Končna točka je zahtevo zavrnila. Pri strežniku v oblaku se prijavite na samem strežniku (npr. »ollama signin«).</string>
-    <string name="keys_endpoint_needs_v1">Končna točka je dosegljiva, vendar se mora naslov končati z /v1 (npr. http://host:11434/v1).</string>
-    <string name="settings_fetch_models">Pridobi modele</string>
-    <string name="settings_fetch_models_loading">Pridobivanje…</string>
-    <string name="settings_fetch_models_success">Naloženih modelov: %1$d</string>
-    <string name="settings_fetch_models_empty">Ni najdenih modelov. Model lahko vseeno vnesete ročno.</string>
-    <string name="settings_fetch_models_failed">Modelov ni bilo mogoče pridobiti. Preverite naslov in ključ API.</string>
-    <string name="settings_models_refresh">Osveži</string>
-    <string name="settings_models_need_key">Za nalaganje seznama modelov dodaj zgoraj ključ API.</string>
-    <string name="settings_models_load_failed">Modelov ni bilo mogoče naložiti. Preveri povezavo in ključ API.</string>
-    <string name="settings_models_empty_provider">Za ta ključ API ni na voljo noben model.</string>
-    <string name="dashboard_service_killed_title">SwiftSlate je bil prekinjen</string>
-    <string name="dashboard_service_killed_message">Storitev v ozadju se je nepričakovano ustavila. Znova jo omogočite v nastavitvah dostopnosti, da boste lahko še naprej uporabljali ukaze.</string>
+    <string name="update_channel_desc">Obvesti, ko je na voljo nova razliÄica Ghostwriter</string>
+    <string name="update_available_title">Na voljo je posodobitev Ghostwriter</string>
+    <string name="update_available_text">Tapnite za ogled najnovejÅ¡e razliÄice</string>
+    <string name="error_input_too_long">Besedilo je predolgo za omejitev Å¾etonov na minuto tega modela. Poskusite znova s krajÅ¡im besedilom.</string>
+    <string name="note_response_truncated">[Opomba: odgovor je morda skrajÅ¡an]</string>
+    <string name="error_provider_auth_required">KonÄna toÄka je zahtevo zavrnila. Pri streÅ¾niku v oblaku se prijavite na samem streÅ¾niku (npr. Â»ollama signinÂ«).</string>    <string name="settings_fetch_models">Pridobi modele</string>
+    <string name="settings_fetch_models_loading">Pridobivanjeâ€¦</string>
+    <string name="settings_fetch_models_success">NaloÅ¾enih modelov: %1$d</string>
+    <string name="settings_fetch_models_empty">Ni najdenih modelov. Model lahko vseeno vnesete roÄno.</string>
+    <string name="settings_fetch_models_failed">Modelov ni bilo mogoÄe pridobiti. Preverite naslov in kljuÄ API.</string>
+    <string name="settings_models_refresh">OsveÅ¾i</string>
+    <string name="settings_models_need_key">Za nalaganje seznama modelov dodaj zgoraj kljuÄ API.</string>
+    <string name="settings_models_load_failed">Modelov ni bilo mogoÄe naloÅ¾iti. Preveri povezavo in kljuÄ API.</string>
+    <string name="settings_models_empty_provider">Za ta kljuÄ API ni na voljo noben model.</string>
+    <string name="dashboard_service_killed_title">Ghostwriter je bil prekinjen</string>
+    <string name="dashboard_service_killed_message">Storitev v ozadju se je nepriÄakovano ustavila. Znova jo omogoÄite v nastavitvah dostopnosti, da boste lahko Å¡e naprej uporabljali ukaze.</string>
     <string name="dashboard_service_killed_dismiss">Zapri</string>
 </resources>

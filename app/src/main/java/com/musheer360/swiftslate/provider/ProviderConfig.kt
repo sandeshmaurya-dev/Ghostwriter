@@ -92,7 +92,9 @@ object GroqConfig : ProviderConfig {
     override fun useJsonObjectMode(structuredOutputEnabled: Boolean): Boolean = structuredOutputEnabled
 }
 
-/** Custom OpenAI-compatible endpoint — user-supplied endpoint and model. */
+/**
+ * Custom OpenAI-compatible endpoint — user-supplied endpoint and model.
+ */
 object CustomConfig : ProviderConfig {
     override val type = ProviderType.CUSTOM
     override val transport = Transport.OPENAI_COMPAT
@@ -104,11 +106,48 @@ object CustomConfig : ProviderConfig {
         model.isNotBlank() && endpoint.isNotBlank()
 }
 
+/**
+ * Ghostwriter Cloud — the free hosted Workers proxy. To the app it is just another
+ * OpenAI-compatible endpoint (Groq-upstream passthrough), but with three differences:
+ *
+ *  - The endpoint is BAKED: the Worker URL (carrying a path-scoped access token) is a
+ *    compile-time constant, with an optional pref override for testing redeploys.
+ *  - There is no real user key. The rotation loop still needs one key to run, so the
+ *    connect flow seeds a placeholder key ([PLACEHOLDER_KEY]); the real auth happens
+ *    server-side against the Worker's token baked into the URL.
+ *  - Models are Groq-curated: the Worker proxies the same catalog.
+ */
+object CloudConfig : ProviderConfig {
+    /**
+     * Baked Worker base URL including the /gw/<token> path. Update here on redeploy;
+     * PrefKeys.CLOUD_ENDPOINT overrides for quick testing without an APK rebuild.
+     */
+    const val DEFAULT_ENDPOINT =
+        "https://ghostwriter.shivammmaurya2003.workers.dev/gw/gw_7f3a91c4e2b8d65f01a9"
+
+    /** Fake key seeded by the connect flow so the rotation loop has something to hold. */
+    const val PLACEHOLDER_KEY = "ghostwriter-cloud"
+
+    override val type = ProviderType.CLOUD
+    override val transport = Transport.OPENAI_COMPAT
+    override val modelPrefKey = PrefKeys.CLOUD_MODEL
+    override val defaultModel = GroqModels.DEFAULT
+    override fun sanitizeModel(stored: String?): String = GroqModels.sanitize(stored)
+    override fun resolveEndpoint(customEndpoint: String): String =
+        customEndpoint.ifBlank { DEFAULT_ENDPOINT }
+    override fun reasoningParams(model: String): Map<String, Any> =
+        GroqModels.reasoningParams(model)
+    override fun useJsonObjectMode(structuredOutputEnabled: Boolean): Boolean =
+        structuredOutputEnabled
+    override fun isConfigured(model: String, endpoint: String): Boolean = model.isNotBlank()
+}
+
 /** Registry resolving a stored provider value to its [ProviderConfig]. */
 object Providers {
     fun forType(type: String?): ProviderConfig = when (ProviderType.sanitize(type)) {
         ProviderType.GROQ -> GroqConfig
         ProviderType.CUSTOM -> CustomConfig
+        ProviderType.CLOUD -> CloudConfig
         else -> GeminiConfig
     }
 }

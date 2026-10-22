@@ -2,11 +2,11 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in SwiftSlate, please report it privately:
+If you discover a security vulnerability in Ghostwriter, please report it privately:
 
-**Email:** me@musheer360.com
+**Contact:** [@sandeshmaurya-dev](https://github.com/sandeshmaurya-dev) on GitHub (open a private security advisory)
 
-**Subject line:** `[SwiftSlate Security] Brief description`
+**Subject line:** `[Ghostwriter Security] Brief description`
 
 Please include:
 - Description of the vulnerability

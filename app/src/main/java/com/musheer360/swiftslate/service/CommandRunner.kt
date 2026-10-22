@@ -45,7 +45,22 @@ suspend fun runTextCommand(
     openAIClient: OpenAICompatibleClient,
     prompt: String,
     text: String,
-    onFirstAttempt: () -> Unit = {}
+    onFirstAttempt: () -> Unit = {},
+    /**
+     * Non-null opts this call into STREAMING: loop-invariant, receives the text
+     * accumulated so far plus the 1-based attempt number (key rotations included —
+     * a new attempt's first deltas arrive with a fresh attempt number so a caller
+     * replaces, rather than appends to, the previous attempt's partial text).
+     * Structured output is disabled while streaming (partial JSON cannot parse).
+     */
+    onDelta: ((textSoFar: String, attempt: Int) -> Unit)? = null,
+    /**
+     * Screen mode ([Command.readsScreen]): [text] is an already-composed
+     * <screen> snapshot message, not plain text to transform, so the system
+     * framing switches from the sed-like transformation contract to the
+     * screen-context contract. The prompt (the Task) is unchanged.
+     */
+    screenMode: Boolean = false
 ): CommandOutcome {
     // keys_keystore_error rather than a "reinstall" message: the usual cause is the Keystore key
     // being invalidated by a lock-screen change, where re-adding the keys is enough.
@@ -61,7 +76,7 @@ suspend fun runTextCommand(
         return CommandOutcome.Unavailable(context.getString(R.string.toast_custom_not_configured))
     }
     val temperature = prefs.getFloat(PrefKeys.TEMPERATURE, DEFAULT_TEMPERATURE).toDouble()
-    val useStructuredOutput = System.currentTimeMillis() -
+    val useStructuredOutput = onDelta == null && System.currentTimeMillis() -
         prefs.getLong(PrefKeys.STRUCTURED_OUTPUT_DISABLED_AT, 0L) > STRUCTURED_OUTPUT_RETRY_MS
 
     var lastErrorMsg: String? = null
@@ -70,6 +85,7 @@ suspend fun runTextCommand(
     var lastFailedKey: String? = null
     var started = false
     val tried = mutableSetOf<String>()
+    var attemptNo = 0
 
     // One attempt per configured key; getNextKey skips the ones already tried, plus any that are
     // benched for rate limiting or known-invalid.
@@ -83,13 +99,39 @@ suspend fun runTextCommand(
         }
 
         val result = when (provider.transport) {
-            Transport.OPENAI_COMPAT -> openAIClient.generate(
-                prompt, text, key, model, temperature, endpoint,
-                useJsonObjectMode = provider.useJsonObjectMode(useStructuredOutput),
-                extraParams = provider.reasoningParams(model))
-            Transport.GEMINI_NATIVE -> geminiClient.generate(
-                prompt, text, key, model, temperature, useStructuredOutput,
-                thinkingLevel = provider.thinkingLevel(model))
+            Transport.OPENAI_COMPAT -> {
+                if (onDelta != null) {
+                    attemptNo++
+                    openAIClient.generateStream(
+                        prompt, text, key, model, temperature, endpoint,
+                        extraParams = provider.reasoningParams(model),
+                        onDelta = { soFar -> onDelta(soFar, attemptNo) },
+                        systemPrompt = if (screenMode) ApiClientUtils.SCREEN_SYSTEM_PROMPT_PREFIX + prompt else null
+                    )
+                } else {
+                    openAIClient.generate(
+                        prompt, text, key, model, temperature, endpoint,
+                        useJsonObjectMode = provider.useJsonObjectMode(useStructuredOutput),
+                        extraParams = provider.reasoningParams(model),
+                        systemPrompt = if (screenMode) ApiClientUtils.SCREEN_SYSTEM_PROMPT_PREFIX + prompt else null)
+                }
+            }
+            Transport.GEMINI_NATIVE -> {
+                if (onDelta != null) {
+                    attemptNo++
+                    geminiClient.generateStream(
+                        prompt, text, key, model, temperature,
+                        thinkingLevel = provider.thinkingLevel(model),
+                        onDelta = { soFar -> onDelta(soFar, attemptNo) },
+                        systemPrompt = if (screenMode) ApiClientUtils.SCREEN_SYSTEM_PROMPT_PREFIX + prompt else null
+                    )
+                } else {
+                    geminiClient.generate(
+                        prompt, text, key, model, temperature, useStructuredOutput,
+                        thinkingLevel = provider.thinkingLevel(model),
+                        systemPrompt = if (screenMode) ApiClientUtils.SCREEN_SYSTEM_PROMPT_PREFIX + prompt else null)
+                }
+            }
         }
 
         result.onSuccess { generated ->

@@ -2,9 +2,18 @@ package com.musheer360.swiftslate.manager
 
 import android.content.Context
 import android.content.SharedPreferences
+import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Locale
+
+/** One recorded successful replacement — the durable core of the history timeline feature. */
+data class HistoryEntry(
+    val trigger: String,
+    val appPackage: String?,
+    val timestamp: Long,
+    val success: Boolean
+)
 
 class StatsManager(context: Context) {
     private val prefs: SharedPreferences = context.getSharedPreferences("stats", Context.MODE_PRIVATE)
@@ -15,6 +24,8 @@ class StatsManager(context: Context) {
         private const val KEY_MONTH = "current_month"
         private const val KEY_COMMAND_COUNTS = "command_counts"
         private const val KEY_DAILY_COUNTS = "daily_counts"
+        private const val KEY_RECENT_HISTORY = "recent_history"
+        private const val MAX_HISTORY_ENTRIES = 50
     }
 
     private fun today(): String = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(System.currentTimeMillis())
@@ -35,9 +46,15 @@ class StatsManager(context: Context) {
     private fun safeString(key: String, def: String?): String? =
         try { prefs.getString(key, def) } catch (_: Exception) { def }
 
-    /** Call after a command is successfully processed. */
+    /**
+     * Call after a command is successfully processed.
+     *
+     * [appPackage] and [success] also feed the recent-history ring: a failed attempt is
+     * recorded too (the timeline distinguishes it visually), but a record with a null package
+     * (older callers, or hosts that do not report one) means simply "unknown app".
+     */
     @Synchronized
-    fun recordUsage(commandName: String) {
+    fun recordUsage(commandName: String, appPackage: String? = null, success: Boolean = true) {
         val editor = prefs.edit()
 
         // Total
@@ -67,7 +84,48 @@ class StatsManager(context: Context) {
         }
         editor.putString(KEY_DAILY_COUNTS, dailyJson.toString())
 
+        // Recent history — a capped ring so a year of typing never grows the pref beyond
+        // a handful of KB. Failures are kept (marked) so the timeline explains gaps where
+        // "the app didn't change the text at all".
+        run {
+            val json = try { JSONArray(prefs.getString(KEY_RECENT_HISTORY, "[]") ?: "[]") } catch (_: Exception) { JSONArray() }
+            val entry = JSONObject()
+            entry.put("t", System.currentTimeMillis())
+            entry.put("c", commandName)
+            if (appPackage != null) entry.put("p", appPackage)
+            entry.put("ok", success)
+            json.put(entry)
+            while (json.length() > MAX_HISTORY_ENTRIES) {
+                json.remove(0)  // oldest at index 0
+            }
+            editor.putString(KEY_RECENT_HISTORY, json.toString())
+        }
+
         editor.apply()
+    }
+
+    /** Newest-first. Corrupt history degrades to empty — never wakes the process up sad. */
+    fun recentHistory(): List<HistoryEntry> {
+        return try {
+            val j = JSONArray(prefs.getString(KEY_RECENT_HISTORY, "[]") ?: "[]")
+            (j.length() - 1 downTo 0).mapNotNull { i ->
+                val e = j.optJSONObject(i) ?: return@mapNotNull null
+                val trigger = e.optString("c", "")
+                if (trigger.isEmpty()) return@mapNotNull null
+                HistoryEntry(
+                    trigger = trigger,
+                    appPackage = e.optString("p", "").ifEmpty { null },
+                    timestamp = e.optLong("t", 0L),
+                    success = e.optBoolean("ok", true)
+                )
+            }
+        } catch (_: Exception) {
+            emptyList()
+        }
+    }
+
+    fun clearHistory() {
+        prefs.edit().putString(KEY_RECENT_HISTORY, "[]").apply()
     }
 
     val totalRequests: Int get() = safeInt(KEY_TOTAL, 0)

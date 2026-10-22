@@ -1,4 +1,4 @@
-# SwiftSlate ProGuard Rules
+# Ghostwriter ProGuard Rules
 
 # Keep the accessibility service (instantiated by Android framework via reflection)
 -keep class com.musheer360.swiftslate.service.AssistantService { <init>(); }
@@ -13,11 +13,13 @@
 -keepattributes SourceFile,LineNumberTable
 -renamesourcefileattribute SourceFile
 
-# Remove debug logging in release
--assumenosideeffects class android.util.Log {
-    public static int v(...);
-    public static int d(...);
-    public static int i(...);
-    public static int w(...);
-    public static int e(...);
-}
+# Remove debug logging in release — TEMPORARILY DISABLED for the trigger-detection
+# investigation: the empty-field ?reply bug needs live logcat from the shipping build.
+# Re-enable once the diag build has served its purpose.
+#-assumenosideeffects class android.util.Log {
+#    public static int v(...);
+#    public static int d(...);
+#    public static int i(...);
+#    public static int w(...);
+#    public static int e(...);
+#}

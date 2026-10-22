@@ -26,7 +26,7 @@ android {
         // that failure mode cannot come back.
         //
         // The filter is still worth having: without it AndroidX/Compose contributes its own
-        // strings for ~30 further locales that SwiftSlate does not translate, for ~64KB of APK
+        // strings for ~30 further locales that this codebase does not translate, for ~64KB of APK
         // in languages the app cannot actually speak.
         //
         // Deliberately NOT translated (removed in this commit): bn, gu, kn, ml, mr, pa, ta, te,
@@ -44,7 +44,7 @@ android {
     androidResources {
         // Generates <locale-config> from the locales in res/ and references it from the
         // manifest, which is what lets Android 13+ users pick a per-app language in
-        // Settings > Apps > SwiftSlate > Language. Without it a heavily localized app is
+        // Settings > Apps > Ghostwriter > Language. Without it a heavily localized app is
         // still stuck following the system language.
         generateLocaleConfig = true
     }

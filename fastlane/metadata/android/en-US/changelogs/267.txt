@@ -1,1 +1,0 @@
-- fix(settings): harmonic adaptive spacing for compact and tall viewports

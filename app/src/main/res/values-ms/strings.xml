@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SwiftSlate</string>
-    <string name="accessibility_service_label">Pembantu SwiftSlate</string>
+    <string name="app_name">Ghostwriter</string>
+    <string name="accessibility_service_label">Pembantu Ghostwriter</string>
     <string name="accessibility_service_desc">Menyediakan penggantian teks berasaskan AI di seluruh sistem apabila arahan pencetus ditaip.</string>
 
     <!-- Dashboard -->
@@ -9,26 +9,13 @@
     <string name="service_status_active">Aktif</string>
     <string name="service_status_inactive">Tidak Aktif</string>
     <string name="service_enable">Dayakan</string>
-    <string name="dashboard_api_keys_title">Kunci API</string>
-    <string name="dashboard_keys_configured">%1$d kunci dikonfigurasi</string>
-    <string name="dashboard_add_key_hint">Tambahkan kunci API untuk memulakan.</string>
     <string name="dashboard_monthly_requests">Bulan Ini</string>
     <string name="dashboard_favorite_command">Arahan Teratas</string>
-    <string name="dashboard_no_data">—</string>
+    <string name="dashboard_no_data">â€”</string>
     <string name="dashboard_last_7_days">7 Hari Terakhir</string>
 
     <!-- Keys -->
-    <string name="keys_title">Kunci API</string>
-    <string name="keys_api_key_label">Kunci API</string>
-    <string name="keys_testing">Menguji…</string>
-    <string name="keys_add_key">Tambah Kunci</string>
-    <string name="keys_valid_added">Kunci sah ditambahkan!</string>
-    <string name="keys_already_added">Kunci ini telah ditambahkan</string>
-    <string name="keys_validation_failed">Pengesahan gagal</string>
     <string name="keys_keystore_error">Penyimpanan kunci selamat tidak tersedia pada peranti ini. Kunci tidak boleh disimpan.</string>
-    <string name="keys_custom_endpoint_required">Set the endpoint URL in Settings before adding a key for the Custom provider</string>
-    <string name="keys_get_api_key">Dapatkan kunci API %1$s anda ↗</string>
-    <string name="keys_empty">Tiada kunci API ditambahkan</string>
 
     <!-- Commands -->
     <string name="commands_title">Arahan</string>
@@ -46,7 +33,7 @@
     <string name="commands_built_in">Binaan</string>
     <string name="commands_error_prefix">Pencetus mesti bermula dengan \'%1$s\'</string>
     <string name="commands_error_duplicate">Arahan dengan pencetus ini sudah wujud</string>
-    <string name="commands_error_conflict">Konflik dengan arahan sedia ada \'%1$s\' — satu pencetus adalah awalan yang lain</string>
+    <string name="commands_error_conflict">Konflik dengan arahan sedia ada \'%1$s\' â€” satu pencetus adalah awalan yang lain</string>
     <string name="commands_error_empty_trigger">Pencetus mesti mempunyai nama selepas awalan</string>
 
     <!-- Settings -->
@@ -78,11 +65,11 @@
     <string name="backup_import_confirm">Ini akan menggantikan semua arahan tersuai sedia ada anda. Teruskan?</string>
     <string name="backup_import_cancel">Batal</string>
     <string name="settings_check_updates">Semak kemas kini</string>
-    <string name="settings_made_by">Dibuat dengan kasih sayang oleh Musheer Alam</string>
+    <string name="settings_made_by">Dibuat dengan kasih sayang oleh Sandesh Maurya</string>
     <string name="settings_sponsor">Taja di GitHub</string>
     <string name="commands_collapse">Runtuhkan</string>
     <string name="commands_expand">Kembangkan</string>
-    <string name="commands_search_hint">Cari arahan…</string>
+    <string name="commands_search_hint">Cari arahanâ€¦</string>
     <string name="commands_search_close">Tutup carian</string>
     <string name="commands_search_empty">Tiada arahan ditemui</string>
 
@@ -106,7 +93,7 @@
     <string name="process_text_retry">Cuba lagi</string>
     <string name="process_text_copied">Disalin</string>
     <string name="process_text_no_selection">Tiada teks dipilih</string>
-    <string name="process_text_no_commands">Tiada perintah tersedia. Tambah satu dalam SwiftSlate.</string>
+    <string name="process_text_no_commands">Tiada perintah tersedia. Tambah satu dalam Ghostwriter.</string>
     <string name="toast_restore_failed">Tidak dapat memulihkan teks asal</string>
     <string name="toast_nothing_to_undo">Tiada apa untuk dibuat asal</string>
     <string name="toast_undo_failed">Tidak dapat membuat asal</string>
@@ -130,15 +117,13 @@
 
     <!-- Update notifications -->
     <string name="update_channel_name">Kemas Kini Apl</string>
-    <string name="update_channel_desc">Memberitahu apabila versi baharu SwiftSlate tersedia</string>
-    <string name="update_available_title">Kemas kini SwiftSlate tersedia</string>
+    <string name="update_channel_desc">Memberitahu apabila versi baharu Ghostwriter tersedia</string>
+    <string name="update_available_title">Kemas kini Ghostwriter tersedia</string>
     <string name="update_available_text">Ketik untuk melihat keluaran terkini</string>
     <string name="error_input_too_long">Teks terlalu panjang untuk had token seminit model ini. Cuba lagi dengan teks yang lebih pendek.</string>
     <string name="note_response_truncated">[Nota: respons mungkin dipotong]</string>
-    <string name="error_provider_auth_required">Pelayan menolak permintaan. Jika ia pelayan awan, log masuk pada pelayan itu sendiri (cth. „ollama signin“).</string>
-    <string name="keys_endpoint_needs_v1">Pelayan boleh dihubungi, tetapi URL perlu berakhir dengan /v1 (cth. http://host:11434/v1).</string>
-    <string name="settings_fetch_models">Dapatkan model</string>
-    <string name="settings_fetch_models_loading">Mendapatkan…</string>
+    <string name="error_provider_auth_required">Pelayan menolak permintaan. Jika ia pelayan awan, log masuk pada pelayan itu sendiri (cth. â€žollama signinâ€œ).</string>    <string name="settings_fetch_models">Dapatkan model</string>
+    <string name="settings_fetch_models_loading">Mendapatkanâ€¦</string>
     <string name="settings_fetch_models_success">%1$d model dimuatkan</string>
     <string name="settings_fetch_models_empty">Tiada model ditemui. Anda masih boleh memasukkan model secara manual.</string>
     <string name="settings_fetch_models_failed">Model tidak dapat diperoleh. Semak alamat dan kunci API.</string>
@@ -146,7 +131,7 @@
     <string name="settings_models_need_key">Tambahkan kunci API di atas untuk memuatkan senarai model.</string>
     <string name="settings_models_load_failed">Tidak dapat memuatkan model. Semak sambungan dan kunci API anda.</string>
     <string name="settings_models_empty_provider">Tiada model tersedia untuk kunci API ini.</string>
-    <string name="dashboard_service_killed_title">SwiftSlate terganggu</string>
+    <string name="dashboard_service_killed_title">Ghostwriter terganggu</string>
     <string name="dashboard_service_killed_message">Perkhidmatan latar belakang berhenti tanpa diduga. Dayakan semula dalam tetapan kebolehaksesan untuk terus menggunakan arahan.</string>
     <string name="dashboard_service_killed_dismiss">Abaikan</string>
 </resources>

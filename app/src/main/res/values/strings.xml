@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">SwiftSlate</string>
-    <string name="accessibility_service_label">SwiftSlate Assistant</string>
+    <string name="app_name">Ghostwriter</string>
+    <string name="accessibility_service_label">Ghostwriter Assistant</string>
     <string name="accessibility_service_desc">Provides system-wide AI text replacements when trigger commands are typed.</string>
 
     <!-- Dashboard -->
@@ -8,26 +8,21 @@
     <string name="service_status_active">Active</string>
     <string name="service_status_inactive">Inactive</string>
     <string name="service_enable">Enable</string>
-    <string name="dashboard_api_keys_title">API Keys</string>
-    <string name="dashboard_keys_configured">%1$d keys configured</string>
-    <string name="dashboard_add_key_hint">Add an API key to get started.</string>
+    <string name="dashboard_cloud_title">Ghostwriter Cloud</string>
+    <string name="dashboard_cloud_subtitle">AI built in — works out of the box</string>
+    <string name="dashboard_cloud_connected">Connected</string>
+    <string name="dashboard_cloud_starting">Starting</string>
     <string name="dashboard_monthly_requests">This Month</string>
     <string name="dashboard_favorite_command">Top Command</string>
     <string name="dashboard_no_data">—</string>
     <string name="dashboard_last_7_days">Last 7 Days</string>
-
-    <!-- Keys -->
-    <string name="keys_title">API Keys</string>
-    <string name="keys_api_key_label">API Key</string>
-    <string name="keys_testing">Testing…</string>
-    <string name="keys_add_key">Add Key</string>
-    <string name="keys_valid_added">Valid key added!</string>
-    <string name="keys_already_added">This key has already been added</string>
-    <string name="keys_validation_failed">Validation failed</string>
-    <string name="keys_keystore_error">Secure key storage is unavailable on this device. Keys cannot be saved.</string>
-    <string name="keys_custom_endpoint_required">Set the endpoint URL in Settings before adding a key for the Custom provider</string>
-    <string name="keys_get_api_key">Get your %1$s API key ↗</string>
-    <string name="keys_empty">No API keys added</string>
+    <!-- Ghostwriter dashboard restyle lead-ins and captions (English default; other
+         locales fall back until translated). -->
+    <string name="dashboard_subtitle">Monitor your usage and manage settings</string>
+    <string name="dashboard_status_desc_active">Service is running</string>
+    <string name="dashboard_status_desc_inactive">Service is currently disabled</string>
+    <string name="dashboard_chart_subtitle">API usage over the past 7 days</string>
+    <string name="dashboard_week_chip">This Week</string>
 
     <!-- Commands -->
     <string name="commands_title">Commands</string>
@@ -53,6 +48,14 @@
     <string name="settings_provider_title">Model Provider</string>
     <string name="settings_provider_gemini">Google Gemini</string>
     <string name="settings_provider_groq">Groq</string>
+    <string name="settings_provider_cloud">Ghostwriter Cloud (Free)</string>
+
+    <!-- Simple setup mode -->
+    <string name="settings_simple_title">Simple setup</string>
+    <string name="settings_simple_desc">Recommended — hides the technical options</string>
+    <string name="settings_cloud_connected_title">Ghostwriter Cloud connected</string>
+    <string name="settings_cloud_connected_desc">Everything is set. No accounts, no configuration — just use the app.</string>
+    <string name="settings_cloud_connecting_title">Connecting Ghostwriter Cloud…</string>
     <string name="settings_provider_custom">Custom (OpenAI Compatible)</string>
     <string name="settings_model_title">Model</string>
     <string name="settings_temperature_title">Temperature</string>
@@ -77,8 +80,8 @@
     <string name="backup_import_confirm">This will replace all your existing custom commands. Continue?</string>
     <string name="backup_import_cancel">Cancel</string>
     <string name="settings_check_updates">Check for updates</string>
-    <string name="settings_made_by">Made with love by Musheer Alam</string>
-    <string name="settings_sponsor">Sponsor on GitHub</string>
+    <string name="settings_made_by">Made with love by Sandesh Maurya</string>
+    <string name="settings_sponsor">github.com/sandeshmaurya-dev</string>
     <string name="commands_collapse">Collapse</string>
     <string name="commands_expand">Expand</string>
     <string name="commands_search_hint">Search commands…</string>
@@ -94,10 +97,15 @@
     <!-- Runtime toasts (accessibility service) -->
     <string name="toast_replace_failed">Could not replace text</string>
     <string name="toast_custom_not_configured">Custom provider not configured. Set endpoint and model in Settings.</string>
-    <string name="toast_key_rate_limited">API key rate limited. Try again in %1$ds</string>
-    <string name="toast_no_keys">No API keys configured</string>
-    <string name="toast_all_keys_invalid">All API keys are invalid. Please check your keys</string>
+    <string name="toast_key_rate_limited">Too many requests — try again in %1$ds</string>
+    <string name="toast_no_keys">Not set up yet — open the Ghostwriter app once to connect</string>
+    <string name="toast_all_keys_invalid">Ghostwriter Cloud is temporarily unavailable. Try again shortly</string>
     <string name="toast_request_timed_out">Request timed out</string>
+    <string name="screen_read_failed">Couldn\'t read anything from this screen. Open the chat or page fully, then try again.</string>
+    <string name="commands_screen_badge">SCREEN</string>
+
+    <!-- Secure-storage error (service + command runner) -->
+    <string name="keys_keystore_error">Secure storage is unavailable on this device right now. Reopen the app to retry.</string>
 
     <!-- Text-selection (PROCESS_TEXT) flow -->
     <string name="process_text_title">Apply a command</string>
@@ -107,7 +115,7 @@
     <string name="process_text_retry">Retry</string>
     <string name="process_text_copied">Copied</string>
     <string name="process_text_no_selection">No text selected</string>
-    <string name="process_text_no_commands">No commands available. Add one in SwiftSlate.</string>
+    <string name="process_text_no_commands">No commands available. Add one in Ghostwriter.</string>
     <string name="toast_restore_failed">Could not restore original text</string>
     <string name="toast_nothing_to_undo">Nothing to undo</string>
     <string name="toast_undo_failed">Could not undo</string>
@@ -115,22 +123,22 @@
     <string name="toast_copied">Copied to clipboard</string>
     <string name="toast_nothing_to_cut">Nothing to cut</string>
     <string name="toast_cut">Cut to clipboard</string>
+    <string name="toast_cleared">Cleared</string>
     <string name="toast_clipboard_empty">Clipboard is empty</string>
     <string name="toast_clipboard_failed">Clipboard operation failed</string>
 
     <!-- Runtime error messages (accessibility service) -->
-    <string name="error_no_model_access">Your API key doesn\'t have access to this model.</string>
-    <string name="error_invalid_key">Invalid API key. Please check your key in Settings.</string>
-    <string name="error_invalid_key_with_hint">Invalid API key (%1$s). Please check your keys in Settings.</string>
+    <string name="error_no_model_access">The AI backend doesn\'t have access to this model.</string>
+    <string name="error_invalid_key">The AI service rejected the request. Try again shortly.</string>
+    <string name="error_invalid_key_with_hint">The AI service rejected the request (%1$s). Try again shortly.</string>
     <string name="error_provider_auth_required">Your endpoint rejected the request. If it is a cloud-based server, sign in on the server itself (e.g. `ollama signin`).</string>
-    <string name="keys_endpoint_needs_v1">Endpoint is reachable, but the URL should end with /v1 (e.g. http://host:11434/v1).</string>
     <string name="error_rate_limited">Rate limited. Try again shortly.</string>
     <string name="error_model_not_found">Model not found. Check your model selection in Settings.</string>
     <string name="error_safety_blocked">Response blocked by safety filters. Try rephrasing.</string>
     <string name="error_empty_response">Model returned an empty response. Try again.</string>
     <string name="error_timeout_connection">Request timed out. Check your connection.</string>
     <string name="error_no_internet">No internet connection.</string>
-    <string name="error_endpoint_unreachable">Could not reach the API. Check your endpoint URL.</string>
+    <string name="error_endpoint_unreachable">Ghostwriter Cloud couldn\'t be reached. Check your internet and try again.</string>
     <string name="error_bad_request">Request failed. Check your settings.</string>
     <!-- TODO translate: new string, falls back to English in the other 50 locales until then.
          Added because HTTP 413 was previously reported as "Rate limited. Try again shortly.",
@@ -139,9 +147,33 @@
     <string name="note_response_truncated">[Note: response may be cut off]</string>
     <!-- Update notification (worker) -->
     <string name="update_channel_name">App Updates</string>
-    <string name="update_channel_desc">Notifies when a new version of SwiftSlate is available</string>
-    <string name="update_available_title">SwiftSlate update available</string>
+    <string name="update_channel_desc">Notifies when a new version of Ghostwriter is available</string>
+    <string name="update_available_title">Ghostwriter update available</string>
     <string name="update_available_text">Tap to view the latest release</string>
+
+    <!-- Keep-alive: persistent status notification (service state armor) -->
+    <string name="keepalive_channel">Ghostwriter status</string>
+    <string name="keepalive_active_title">%1$s is active</string>
+    <string name="keepalive_active_text">Commands work — triggers are being watched</string>
+    <string name="keepalive_stopped_title">%1$s was stopped</string>
+    <string name="keepalive_stopped_text">Type-replace is off — tap to re-enable</string>
+
+    <!-- Keep-alive dashboard card -->
+    <string name="keepalive_card_title">Keep Ghostwriter alive</string>
+    <string name="keepalive_card_subtitle">Stop your phone from killing the service</string>
+    <string name="keepalive_battery_title">Battery optimization</string>
+    <string name="keepalive_battery_subtitle">Exempt Ghostwriter so the system spares it</string>
+    <string name="keepalive_fix">Fix</string>
+    <string name="keepalive_autostart_title">%1$s Autostart</string>
+    <string name="keepalive_autostart_subtitle">Allow Autostart in your phone\'s settings</string>
+    <string name="keepalive_row_stopped">Service is off</string>
+    <string name="keepalive_row_enable">Enable</string>
+    <string name="keepalive_dismiss">Dismiss</string>
+
+    <!-- Quick Settings tile -->
+    <string name="tile_app_label">Ghostwriter</string>
+    <string name="tile_desc_active">Service active</string>
+    <string name="tile_desc_stopped">Service stopped — tap to fix</string>
 
     <string name="settings_fetch_models">Fetch models</string>
     <string name="settings_fetch_models_loading">Fetching…</string>
@@ -152,7 +184,22 @@
     <string name="settings_models_need_key">Add an API key above to load the model list.</string>
     <string name="settings_models_load_failed">Couldn\'t load models. Check your connection and API key.</string>
     <string name="settings_models_empty_provider">No models are available for this API key.</string>
-    <string name="dashboard_service_killed_title">SwiftSlate was interrupted</string>
+    <string name="dashboard_service_killed_title">Ghostwriter was interrupted</string>
     <string name="dashboard_service_killed_message">The background service stopped unexpectedly. Re-enable it in accessibility settings to keep using commands.</string>
     <string name="dashboard_service_killed_dismiss">Dismiss</string>
+    <string name="exclusions_title">Excluded apps</string>
+    <string name="exclusions_desc">Ghostwriter ignores text changes in these apps. Great for banking apps, password managers and anything you never want rewritten.</string>
+    <string name="exclusions_manage">Choose an app…</string>
+    <string name="exclusions_custom_hint">Or type a package name</string>
+    <string name="exclusions_add">Add</string>
+    <string name="exclusions_empty">Nothing excluded yet.</string>
+    <string name="exclusions_none_found">No launcher apps found.</string>
+    <string name="exclusion_added_toast">%1$s will now be ignored by Ghostwriter</string>
+    <string name="exclusion_removed_toast">%1$s is no longer excluded</string>
+    <string name="exclusion_duplicate">Already excluded</string>
+
+    <string name="history_title">Recent activity</string>
+    <string name="history_empty">Nothing yet. Run a trigger and it will show up here.</string>
+    <string name="history_failed_tag">failed</string>
+
 </resources>

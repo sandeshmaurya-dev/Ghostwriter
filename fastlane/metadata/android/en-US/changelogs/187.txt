@@ -1,1 +1,0 @@
-- fix: don't let a stale accessibility node crash the service

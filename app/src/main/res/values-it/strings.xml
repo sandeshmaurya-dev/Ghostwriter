@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SwiftSlate</string>
-    <string name="accessibility_service_label">Assistente SwiftSlate</string>
+    <string name="app_name">Ghostwriter</string>
+    <string name="accessibility_service_label">Assistente Ghostwriter</string>
     <string name="accessibility_service_desc">Fornisce sostituzioni di testo basate su IA a livello di sistema quando vengono digitati comandi trigger.</string>
 
     <!-- Dashboard -->
@@ -9,26 +9,13 @@
     <string name="service_status_active">Attivo</string>
     <string name="service_status_inactive">Inattivo</string>
     <string name="service_enable">Abilita</string>
-    <string name="dashboard_api_keys_title">Chiavi API</string>
-    <string name="dashboard_keys_configured">%1$d chiavi configurate</string>
-    <string name="dashboard_add_key_hint">Aggiungi una chiave API per iniziare.</string>
     <string name="dashboard_monthly_requests">Questo mese</string>
-    <string name="dashboard_favorite_command">Comando più usato</string>
-    <string name="dashboard_no_data">—</string>
+    <string name="dashboard_favorite_command">Comando piÃ¹ usato</string>
+    <string name="dashboard_no_data">â€”</string>
     <string name="dashboard_last_7_days">Ultimi 7 giorni</string>
 
     <!-- Keys -->
-    <string name="keys_title">Chiavi API</string>
-    <string name="keys_api_key_label">Chiave API</string>
-    <string name="keys_testing">Test in corso…</string>
-    <string name="keys_add_key">Aggiungi chiave</string>
-    <string name="keys_valid_added">Chiave valida aggiunta!</string>
-    <string name="keys_already_added">Questa chiave è già stata aggiunta</string>
-    <string name="keys_validation_failed">Convalida fallita</string>
-    <string name="keys_keystore_error">L\'archiviazione sicura delle chiavi non è disponibile su questo dispositivo. Le chiavi non possono essere salvate.</string>
-    <string name="keys_custom_endpoint_required">Set the endpoint URL in Settings before adding a key for the Custom provider</string>
-    <string name="keys_get_api_key">Ottieni la tua chiave API per %1$s ↗</string>
-    <string name="keys_empty">Nessuna chiave API aggiunta</string>
+    <string name="keys_keystore_error">L\'archiviazione sicura delle chiavi non Ã¨ disponibile su questo dispositivo. Le chiavi non possono essere salvate.</string>
 
     <!-- Commands -->
     <string name="commands_title">Comandi</string>
@@ -45,8 +32,8 @@
     <string name="commands_replacement_label">Testo di sostituzione (es. myemail@example.com)</string>
     <string name="commands_built_in">Integrato</string>
     <string name="commands_error_prefix">Il trigger deve iniziare con \'%1$s\'</string>
-    <string name="commands_error_duplicate">Esiste già un comando con questo trigger</string>
-    <string name="commands_error_conflict">Conflitto con il comando esistente \'%1$s\' — un trigger è prefisso dell\'altro</string>
+    <string name="commands_error_duplicate">Esiste giÃ  un comando con questo trigger</string>
+    <string name="commands_error_conflict">Conflitto con il comando esistente \'%1$s\' â€” un trigger Ã¨ prefisso dell\'altro</string>
     <string name="commands_error_empty_trigger">Il trigger deve avere un nome dopo il prefisso</string>
 
     <!-- Settings -->
@@ -62,10 +49,10 @@
     <string name="settings_model_placeholder">gpt-4o, claude-3-haiku, ecc.</string>
     <string name="settings_trigger_prefix_desc">Simbolo utilizzato prima dei nomi dei comandi (es. %1$sfix).</string>
     <string name="settings_prefix_error_length">Deve essere esattamente 1 carattere</string>
-    <string name="settings_prefix_error_whitespace">Non può essere uno spazio</string>
-    <string name="settings_prefix_error_alphanumeric">Non può essere una lettera o una cifra</string>
+    <string name="settings_prefix_error_whitespace">Non puÃ² essere uno spazio</string>
+    <string name="settings_prefix_error_alphanumeric">Non puÃ² essere una lettera o una cifra</string>
     <string name="settings_endpoint_error_scheme">Deve iniziare con https://</string>
-    <string name="settings_endpoint_error_spaces">L\'URL non può contenere spazi</string>
+    <string name="settings_endpoint_error_spaces">L\'URL non puÃ² contenere spazi</string>
 
     <!-- Backup -->
     <string name="backup_desc">Esporta o importa i tuoi comandi come file JSON.</string>
@@ -75,21 +62,21 @@
     <string name="backup_export_error">Esportazione fallita</string>
     <string name="backup_import_success">Comandi importati con successo</string>
     <string name="backup_import_error">File di backup non valido</string>
-    <string name="backup_import_confirm">Questo sostituirà tutti i tuoi comandi personalizzati esistenti. Continuare?</string>
+    <string name="backup_import_confirm">Questo sostituirÃ  tutti i tuoi comandi personalizzati esistenti. Continuare?</string>
     <string name="backup_import_cancel">Annulla</string>
     <string name="settings_check_updates">Verifica aggiornamenti</string>
-    <string name="settings_made_by">Fatto con amore da Musheer Alam</string>
+    <string name="settings_made_by">Fatto con amore da Sandesh Maurya</string>
     <string name="settings_sponsor">Sponsorizza su GitHub</string>
     <string name="commands_collapse">Comprimi</string>
     <string name="commands_expand">Espandi</string>
-    <string name="commands_search_hint">Cerca comandi…</string>
+    <string name="commands_search_hint">Cerca comandiâ€¦</string>
     <string name="commands_search_close">Chiudi ricerca</string>
     <string name="commands_search_empty">Nessun comando trovato</string>
 
     <!-- Delete confirmation -->
     <string name="delete_confirm_command_title">Eliminare questo comando?</string>
     <string name="delete_confirm_key_title">Eliminare questa chiave API?</string>
-    <string name="delete_confirm_message">Questa azione non può essere annullata.</string>
+    <string name="delete_confirm_message">Questa azione non puÃ² essere annullata.</string>
     <string name="delete_confirm_button">Elimina</string>
 
     <!-- Toasts & errors -->
@@ -106,7 +93,7 @@
     <string name="process_text_retry">Riprova</string>
     <string name="process_text_copied">Copiato</string>
     <string name="process_text_no_selection">Nessun testo selezionato</string>
-    <string name="process_text_no_commands">Nessun comando disponibile. Aggiungine uno in SwiftSlate.</string>
+    <string name="process_text_no_commands">Nessun comando disponibile. Aggiungine uno in Ghostwriter.</string>
     <string name="toast_restore_failed">Impossibile ripristinare il testo originale</string>
     <string name="toast_nothing_to_undo">Niente da annullare</string>
     <string name="toast_undo_failed">Impossibile annullare</string>
@@ -130,15 +117,13 @@
 
     <!-- Updates -->
     <string name="update_channel_name">Aggiornamenti app</string>
-    <string name="update_channel_desc">Notifica quando è disponibile una nuova versione di SwiftSlate</string>
-    <string name="update_available_title">Aggiornamento di SwiftSlate disponibile</string>
+    <string name="update_channel_desc">Notifica quando Ã¨ disponibile una nuova versione di Ghostwriter</string>
+    <string name="update_available_title">Aggiornamento di Ghostwriter disponibile</string>
     <string name="update_available_text">Tocca per visualizzare l\'ultima versione</string>
-    <string name="error_input_too_long">Il testo è troppo lungo per il limite di token al minuto di questo modello. Riprova con un testo più corto.</string>
+    <string name="error_input_too_long">Il testo Ã¨ troppo lungo per il limite di token al minuto di questo modello. Riprova con un testo piÃ¹ corto.</string>
     <string name="note_response_truncated">[Nota: la risposta potrebbe essere troncata]</string>
-    <string name="error_provider_auth_required">L\'endpoint ha rifiutato la richiesta. Se è un server cloud, accedi direttamente sul server (es. „ollama signin“).</string>
-    <string name="keys_endpoint_needs_v1">L\'endpoint è raggiungibile, ma l\'URL deve terminare con /v1 (es. http://host:11434/v1).</string>
-    <string name="settings_fetch_models">Recupera modelli</string>
-    <string name="settings_fetch_models_loading">Recupero…</string>
+    <string name="error_provider_auth_required">L\'endpoint ha rifiutato la richiesta. Se Ã¨ un server cloud, accedi direttamente sul server (es. â€žollama signinâ€œ).</string>    <string name="settings_fetch_models">Recupera modelli</string>
+    <string name="settings_fetch_models_loading">Recuperoâ€¦</string>
     <string name="settings_fetch_models_success">Caricati %1$d modelli</string>
     <string name="settings_fetch_models_empty">Nessun modello trovato. Puoi comunque inserirne uno manualmente.</string>
     <string name="settings_fetch_models_failed">Impossibile recuperare i modelli. Controlla l\'indirizzo e la chiave API.</string>
@@ -146,7 +131,7 @@
     <string name="settings_models_need_key">Aggiungi una chiave API qui sopra per caricare l\'elenco dei modelli.</string>
     <string name="settings_models_load_failed">Impossibile caricare i modelli. Controlla la connessione e la chiave API.</string>
     <string name="settings_models_empty_provider">Nessun modello disponibile per questa chiave API.</string>
-    <string name="dashboard_service_killed_title">SwiftSlate è stato interrotto</string>
-    <string name="dashboard_service_killed_message">Il servizio in background si è arrestato in modo imprevisto. Riattivalo nelle impostazioni di accessibilità per continuare a usare i comandi.</string>
+    <string name="dashboard_service_killed_title">Ghostwriter Ã¨ stato interrotto</string>
+    <string name="dashboard_service_killed_message">Il servizio in background si Ã¨ arrestato in modo imprevisto. Riattivalo nelle impostazioni di accessibilitÃ  per continuare a usare i comandi.</string>
     <string name="dashboard_service_killed_dismiss">Ignora</string>
 </resources>

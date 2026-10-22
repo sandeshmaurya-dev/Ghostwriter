@@ -170,19 +170,205 @@ class GeminiClient {
         model: String,
         temperature: Double,
         useStructuredOutput: Boolean = false,
-        thinkingLevel: String? = null
+        thinkingLevel: String? = null,
+        systemPrompt: String? = null
     ): Result<GenerateResult> = withContext(Dispatchers.IO) {
-        var result = doGenerate(prompt, text, apiKey, model, temperature, useStructuredOutput, thinkingLevel)
+        var result = doGenerate(prompt, text, apiKey, model, temperature, useStructuredOutput, thinkingLevel, systemPrompt)
 
         // Retry once for transient network/server errors (with 1.5s backoff)
         if (result.isFailure && result.exceptionOrNull().isTransientNetwork()) {
             kotlinx.coroutines.delay(1500)
-            result = doGenerate(prompt, text, apiKey, model, temperature, useStructuredOutput, thinkingLevel)
+            result = doGenerate(prompt, text, apiKey, model, temperature, useStructuredOutput, thinkingLevel, systemPrompt)
         }
 
         val cleaned = stripHttpPrefix(result.map { it.text })
         val meta = result.getOrNull()
         cleaned.map { GenerateResult(it, meta?.structuredOutputFailed == true, meta?.truncated == true) }
+    }
+
+    /**
+     * Streaming variant of [generate]. Same request body, same error taxonomy — but
+     * hits `:streamGenerateContent?alt=sse` and reports every chunk through [onDelta]
+     * with the text accumulated SO FAR (cumulative, not the bare delta), so callers
+     * can rewrite a field live.
+     *
+     * Structured output is not offered here: partial JSON cannot be parsed mid-stream,
+     * so the caller passes onDelta only when it has opted into plain-text streaming.
+     * A 〈think〉 passthrough also never happens on Gemini paths — content parts
+     * flagged `thought: true` are skipped instead of accumulated.
+     *
+     * Single-shot like the retry block above it implies: transient failures are left
+     * to the caller's existing key-rotation loop rather than a second attempt with
+     * deltas that would visually rewind the text.
+     */
+    suspend fun generateStream(
+        prompt: String,
+        text: String,
+        apiKey: String,
+        model: String,
+        temperature: Double,
+        thinkingLevel: String? = null,
+        onDelta: (String) -> Unit,
+        systemPrompt: String? = null
+    ): Result<GenerateResult> = withContext(Dispatchers.IO) {
+        var connection: HttpURLConnection? = null
+        try {
+            val safeModel = model.replace(Regex("[^a-zA-Z0-9._-]"), "")
+            connection = URL(
+                "https://generativelanguage.googleapis.com/v1beta/models/$safeModel:streamGenerateContent?alt=sse"
+            ).openConnection() as HttpURLConnection
+            connection.requestMethod = "POST"
+            connection.setRequestProperty("Content-Type", "application/json")
+            connection.setRequestProperty("x-goog-api-key", apiKey)
+            connection.doOutput = true
+            connection.connectTimeout = 30_000
+            connection.readTimeout = 60_000
+
+            val jsonBody = JSONObject().apply {
+                put("systemInstruction", JSONObject().apply {
+                    put("parts", JSONArray().apply {
+                        put(JSONObject().apply {
+                            put("text", systemPrompt ?: ApiClientUtils.SYSTEM_PROMPT_PREFIX + prompt)
+                        })
+                    })
+                })
+                put("contents", JSONArray().apply {
+                    put(JSONObject().apply {
+                        put("parts", JSONArray().apply {
+                            put(JSONObject().apply {
+                                put("text", ApiClientUtils.wrapUserText(text))
+                            })
+                        })
+                    })
+                })
+                put("safetySettings", JSONArray().apply {
+                    for (cat in arrayOf("HARM_CATEGORY_HARASSMENT", "HARM_CATEGORY_HATE_SPEECH", "HARM_CATEGORY_SEXUALLY_EXPLICIT", "HARM_CATEGORY_DANGEROUS_CONTENT", "HARM_CATEGORY_CIVIC_INTEGRITY")) {
+                        put(JSONObject().apply {
+                            put("category", cat)
+                            put("threshold", "BLOCK_NONE")
+                        })
+                    }
+                })
+                put("generationConfig", JSONObject().apply {
+                    put("temperature", temperature)
+                    if (thinkingLevel != null) {
+                        put("thinkingConfig", JSONObject().apply {
+                            put("thinkingLevel", thinkingLevel)
+                        })
+                    }
+                })
+            }
+
+            connection.outputStream.use { os ->
+                os.write(jsonBody.toString().toByteArray(Charsets.UTF_8))
+            }
+
+            val responseCode = connection.responseCode
+            if (responseCode !in 200..299) {
+                val errorBody = ApiClientUtils.readErrorBody(connection)
+                throw mapStreamError(responseCode, connection.getHeaderField("Retry-After"), errorBody)
+            }
+
+            val accumulated = StringBuilder()
+            var truncated = false
+            connection.inputStream.bufferedReader(Charsets.UTF_8).forEachLine { line ->
+                if (!line.startsWith("data:")) return@forEachLine
+                val payload = line.removePrefix("data:").trim()
+                if (payload.isEmpty() || payload == "[DONE]") return@forEachLine
+                try {
+                    val candidate = JSONObject(payload)
+                        .optJSONArray("candidates")?.optJSONObject(0)
+                        ?: return@forEachLine
+                    val finishReason = candidate.optString("finishReason", "")
+                    if (finishReason == "MAX_TOKENS") truncated = true
+                    if (finishReason in setOf("SAFETY", "RECITATION", "PROHIBITED_CONTENT", "SPII", "BLOCKLIST")) {
+                        throw ApiException(ApiError.Other("Response blocked by safety filters"), "Response blocked by safety filters")
+                    }
+                    val parts = candidate.optJSONObject("content")?.optJSONArray("parts")
+                        ?: return@forEachLine
+                    for (i in 0 until parts.length()) {
+                        val part = parts.optJSONObject(i) ?: continue
+                        // thought:true parts are Gemini's own chain of thought — never
+                        // accumulate them: the field is only allowed to show the answer.
+                        if (part.optBoolean("thought", false)) continue
+                        val t = part.optString("text", "")
+                        if (t.isNotEmpty()) {
+                            accumulated.append(t)
+                            onDelta(accumulated.toString())
+                        }
+                    }
+                } catch (e: ApiException) {
+                    throw e
+                } catch (_: org.json.JSONException) {
+                    // A malformed chunk is tolerated: the next chunk carries the state.
+                }
+            }
+
+            val resultText = ApiClientUtils.stripMarkdownFences(accumulated.toString())
+            if (resultText.isBlank()) {
+                Result.failure(Exception("Model returned empty response"))
+            } else {
+                Result.success(GenerateResult(resultText, truncated = truncated))
+            }
+        } catch (e: Exception) {
+            val apiError = when (e) {
+                is ApiException -> e.apiError
+                is SocketTimeoutException, is UnknownHostException, is ConnectException, is java.net.SocketException -> ApiError.Network(e.message ?: "Network error")
+                is org.json.JSONException -> ApiError.Other("Invalid response from server")
+                else -> ApiError.Other(e.message ?: "Unknown error")
+            }
+            if (e is ApiException) Result.failure(e) else Result.failure(ApiException(apiError, e.message ?: "Unknown error"))
+        } finally {
+            connection?.disconnect()
+        }
+    }
+
+    /**
+     * Mirrors [doGenerate]'s non-2xx classification exactly (413 → rate limit so the
+     * key is cooled instead of hard-failed, 429 with Retry-After, Gemini's 400-carried
+     * API_KEY_INVALID, 404/model_not_found normalization, 5xx → ServerError) so key
+     * rotation and benching behave identically whether the response streamed or not.
+     */
+    private fun mapStreamError(
+        responseCode: Int,
+        retryAfterHeader: String?,
+        errorBody: String
+    ): ApiException {
+        val apiMessage = ApiClientUtils.extractApiErrorMessage(errorBody)
+        return when (responseCode) {
+            413 -> {
+                val detail = apiMessage.ifEmpty { "Request too large" }
+                ApiException(ApiError.RequestTooLarge(detail), detail)
+            }
+            429 -> {
+                val seconds = retryAfterHeader?.toIntOrNull()
+                val msg = if (seconds != null) "Rate limit exceeded, retry after ${seconds}s" else "Rate limit exceeded"
+                ApiException(ApiError.RateLimit(msg, seconds), msg)
+            }
+            400, 422 -> {
+                if (errorBody.contains("API_KEY_INVALID") ||
+                    apiMessage.contains("API key not valid", ignoreCase = true)) {
+                    val detail = apiMessage.ifEmpty { "Invalid API key" }
+                    ApiException(ApiError.InvalidKey(detail), detail)
+                } else {
+                    val detail = apiMessage.ifEmpty { "Bad request" }
+                    ApiException(ApiError.Other(detail), "HTTP_${responseCode}: $detail")
+                }
+            }
+            401, 403 -> {
+                val detail = apiMessage.ifEmpty { "Invalid API key" }
+                ApiException(ApiError.InvalidKey(detail), detail)
+            }
+            else -> {
+                var detail = ApiClientUtils.sanitizeErrorForUser(responseCode, errorBody, "Unexpected error (HTTP $responseCode)")
+                val providerCode = ApiClientUtils.extractApiErrorCode(errorBody)
+                if (responseCode == 404 || providerCode == "model_not_found") {
+                    detail = "Model not found. $detail"
+                }
+                val apiError = if (responseCode in 500..599) ApiError.ServerError(detail) else ApiError.Other(detail)
+                ApiException(apiError, detail)
+            }
+        }
     }
 
     private fun stripHttpPrefix(result: Result<String>): Result<String> {
@@ -201,7 +387,8 @@ class GeminiClient {
         model: String,
         temperature: Double,
         withStructured: Boolean,
-        thinkingLevel: String? = null
+        thinkingLevel: String? = null,
+        systemPrompt: String? = null
     ): Result<GenerateResult> {
         var connection: HttpURLConnection? = null
         return try {
@@ -219,7 +406,7 @@ class GeminiClient {
                 put("systemInstruction", JSONObject().apply {
                     put("parts", JSONArray().apply {
                         put(JSONObject().apply {
-                            put("text", ApiClientUtils.SYSTEM_PROMPT_PREFIX + prompt)
+                            put("text", systemPrompt ?: ApiClientUtils.SYSTEM_PROMPT_PREFIX + prompt)
                         })
                     })
                 })

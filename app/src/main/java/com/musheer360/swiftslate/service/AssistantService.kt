@@ -16,13 +16,16 @@ import android.util.Log
 import android.view.HapticFeedbackConstants
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import com.musheer360.swiftslate.api.ApiClientUtils
 import com.musheer360.swiftslate.api.GeminiClient
 import com.musheer360.swiftslate.api.OpenAICompatibleClient
 import com.musheer360.swiftslate.manager.CommandManager
 import com.musheer360.swiftslate.manager.KeyManager
 import com.musheer360.swiftslate.manager.StatsManager
 import com.musheer360.swiftslate.model.Command
+import com.musheer360.swiftslate.model.CommandChain
 import com.musheer360.swiftslate.model.CommandType
+import com.musheer360.swiftslate.model.PrefKeys
 import com.musheer360.swiftslate.ui.processtext.ProcessTextEdit
 import com.musheer360.swiftslate.ui.processtext.ProcessTextReplacementBridge
 import com.musheer360.swiftslate.ui.processtext.resolveProcessTextEdit
@@ -67,6 +70,23 @@ class AssistantService : AccessibilityService() {
     private var triggerLastChars = setOf<Char>()
     private var cachedPrefix = CommandManager.DEFAULT_PREFIX
     private var cachedTranslatePrefix = ""
+
+    /**
+     * A translate match waiting for the typing to pause (see TRANSLATE_COMMIT_DELAY_MS).
+     * Exactly one at a time; every new translate event replaces it (recycling the
+     * superseded node), and every fire consumes it.
+     */
+    private var pendingTranslate: PendingTranslate? = null
+    private var pendingTranslateRunnable: Runnable? = null
+
+    private class PendingTranslate(
+        val source: AccessibilityNodeInfo,
+        val instruction: String,
+        val command: Command,
+        val appPackage: String?
+    )
+    /** Packages whose events must be ignored entirely (excluded-apps feature). Refreshed with the trigger cache. */
+    private var excludedPackages: Set<String> = emptySet()
     @Volatile
     private var currentJob: Job? = null
     private var processingResetRunnable: Runnable? = null
@@ -113,6 +133,14 @@ class AssistantService : AccessibilityService() {
         const val TRIGGER_REFRESH_INTERVAL_MS = 5_000L
         const val PROCESSING_WATCHDOG_MS = 120_000L
         const val FOCUS_FALLBACK_MIN_INTERVAL_MS = 300L
+        /**
+         * How long a translate match waits after the last keystroke before committing.
+         * Translate is the one parameterized trigger: its language argument is typed
+         * word-by-word, and intermediate prefixes can themselves be valid entries
+         * ("hi" of "hindi"). Rescheduling on every text change instead of firing
+         * instantly is what lets full language names work.
+         */
+        const val TRANSLATE_COMMIT_DELAY_MS = 1_200L
         val SPINNER_FRAMES = arrayOf("◐", "◓", "◑", "◒")
     }
 
@@ -123,6 +151,12 @@ class AssistantService : AccessibilityService() {
             commandManager = CommandManager(applicationContext)
             statsManager = StatsManager(applicationContext)
             updateTriggers()
+            // The permanent shade notice flips to "active" the moment the service is
+            // really bound. If init failed above, no update happens — the pre-refresh
+            // state lingers, which may briefly say active for a service that stays inert
+            // (#125 degraded mode) until the next teardown sets it stopped. Acceptable:
+            // notification truth is eventually consistent, unlike the dead-silence status quo.
+            KeepAlive.postActive(this)
         } catch (e: Exception) {
             // This callback runs on the binder thread with no framework guard: an exception
             // here propagates to AccessibilityManagerService, which drops the service into the
@@ -137,7 +171,72 @@ class AssistantService : AccessibilityService() {
         cachedTranslatePrefix = "${cachedPrefix}translate:"
         val cmds = commandManager.getCommands()
         triggerLastChars = cmds.mapNotNull { it.trigger.lastOrNull() }.toSet()
+        excludedPackages = try {
+            val prefs = applicationContext.getSharedPreferences("settings", Context.MODE_PRIVATE)
+            val raw = prefs.getString(PrefKeys.EXCLUDED_PACKAGES, null)
+            if (raw.isNullOrEmpty()) {
+                emptySet()
+            } else {
+                val arr = org.json.JSONArray(raw)
+                (0 until arr.length()).mapNotNull { arr.optString(it).takeIf { s -> s.isNotEmpty() } }.toSet()
+            }
+        } catch (_: Exception) {
+            emptySet()
+        }
         lastTriggerRefresh = System.currentTimeMillis()
+    }
+
+    /**
+     * Arms the translate commit timer. Called on every matching volver keystroke, so
+     * the timer keeps sliding forward as long as the user is still typing the
+     * language name — the commit happens exactly once, after a 1.2s pause.
+     */
+    private fun scheduleTranslateCommit(
+        source: AccessibilityNodeInfo,
+        instruction: String,
+        command: Command,
+        appPackage: String?
+    ) {
+        pendingTranslateRunnable?.let { handler.removeCallbacks(it) }
+        pendingTranslateRunnable = null
+        val pending = pendingTranslate
+        if (pending != null && pending.source !== source) {
+            pending.source.safeRecycle()
+        }
+        pendingTranslate = PendingTranslate(source, instruction, command, appPackage)
+        val runnable = Runnable { firePendingTranslate() }
+        pendingTranslateRunnable = runnable
+        if (!handler.postDelayed(runnable, TRANSLATE_COMMIT_DELAY_MS)) {
+            // Looper is dead — the service is going down anyway; degrade to immediate.
+            firePendingTranslate()
+        }
+    }
+
+    /** Consumes the pending translate when the user has paused typing. */
+    private fun firePendingTranslate() {
+        pendingTranslateRunnable = null
+        val pending = pendingTranslate ?: return
+        pendingTranslate = null
+        if (!isProcessing.compareAndSet(false, true)) {
+            // Some other command owns the field — the stale snapshot loses.
+            pending.source.safeRecycle()
+            return
+        }
+        startWatchdog()
+        cancelPendingProcessingReset()
+        currentJob?.cancel()
+        processCommand(pending.source, pending.instruction, pending.command, pending.appPackage)
+    }
+
+    /** Drops a pending translate; [currentSource] must not be double-recycled. */
+    private fun cancelPendingTranslate(currentSource: AccessibilityNodeInfo?) {
+        pendingTranslateRunnable?.let { handler.removeCallbacks(it) }
+        pendingTranslateRunnable = null
+        val pending = pendingTranslate
+        pendingTranslate = null
+        if (pending != null && (currentSource == null || pending.source !== currentSource)) {
+            pending.source.safeRecycle()
+        }
     }
 
     private fun startWatchdog() {
@@ -191,7 +290,8 @@ class AssistantService : AccessibilityService() {
 
     private fun handleAccessibilityEvent(event: AccessibilityEvent?) {
         if (event?.eventType != AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED) return
-        if (event.packageName?.toString() == packageName) return
+        val eventPackage = event.packageName?.toString()
+        if (eventPackage == packageName) return
         if (!::keyManager.isInitialized) return
 
         // Some hosts (WeChat-style editors, WebView fields) emit text-changed events whose
@@ -209,9 +309,19 @@ class AssistantService : AccessibilityService() {
             source.safeRecycle()
             return
         }
+        // Excluded apps: banking/password type packages opted out of in place. Checked before
+        // any other work because these events may never legitimately trigger a text rewrite.
+        if (eventPackage != null && eventPackage in excludedPackages) {
+            source.safeRecycle()
+            return
+        }
         val text = source.text?.toString() ?: run {
             source.safeRecycle()
             return
+        }
+        if (text.startsWith(cachedPrefix)) {
+            Log.d(TAG, "evt pkg=" + eventPackage + " text='" + text + "'" +
+                " srcNull=" + (event.source == null) + " processing=" + isProcessing.get())
         }
         if (handlePendingProcessTextReplacement(event, source, text)) return
         if (isProcessing.get()) {
@@ -219,6 +329,7 @@ class AssistantService : AccessibilityService() {
             return
         }
         if (text.isEmpty()) {
+            cancelPendingTranslate(source)
             verifyRunnable?.let { handler.removeCallbacks(it) }
             lastReplacedText = null
             val prev = lastReplacedSource
@@ -242,20 +353,34 @@ class AssistantService : AccessibilityService() {
             updateTriggers()
         }
 
-        val lastChar = text[text.length - 1]
+        // IME text can carry case noise ("?Reply" from auto-capitalization on an empty
+        // field) and trailing auto-space ("?reply "). All trigger work — the fast-path
+        // last-char gate, the translate lookahead, and matching — must operate on the
+        // same trimmed form, or anything typed auto-appended after the trigger
+        // silently kills detection before findCommand ever runs.
+        val matchText = text.trimEnd()
+        if (matchText.isEmpty()) {
+            // Whitespace-only field: nothing to match, nothing to do.
+            source.safeRecycle()
+            return
+        }
+        val lastChar = matchText[matchText.length - 1]
         if (!triggerLastChars.contains(lastChar)) {
-            if (!lastChar.isLetterOrDigit() || !text.contains(cachedTranslatePrefix)) {
+            if (!lastChar.isLetterOrDigit() || !matchText.contains(cachedTranslatePrefix)) {
                 source.safeRecycle()
                 return
             }
         }
 
-        val command = commandManager.findCommand(text) ?: run {
+        val command = commandManager.findCommand(matchText) ?: run {
             source.safeRecycle()
             return
         }
+        // Screen-command diagnostics: what matched, and what the service decided.
+        Log.d(TAG, "command matched: '" + command.trigger + "' screen=" + command.readsScreen +
+            " textLen=" + text.length + " srcFromEvent=" + (event.source != null))
 
-        val precedingText = text.substring(0, text.length - command.trigger.length)
+        val precedingText = matchText.substring(0, matchText.length - command.trigger.length)
         val cleanText = precedingText.trim()
 
         if (command.trigger.endsWith("undo") && command.isBuiltIn) {
@@ -271,7 +396,8 @@ class AssistantService : AccessibilityService() {
         }
 
         if (command.isBuiltIn && (command.trigger.endsWith("copy") || command.trigger.endsWith("cut") ||
-            command.trigger.endsWith("paste") || command.trigger.endsWith("replace"))) {
+            command.trigger.endsWith("paste") || command.trigger.endsWith("replace") ||
+            command.trigger.endsWith("clear"))) {
             if (!isProcessing.compareAndSet(false, true)) {
                 source.safeRecycle()
                 return
@@ -283,8 +409,31 @@ class AssistantService : AccessibilityService() {
             return
         }
 
+        // Chain resolution for the AI / text-replacer stages below. System commands were
+        // intercepted above, so a system command can only appear here as a lone stage where
+        // it is the entire chain — matching the single-command paths byte-for-byte.
+        val chain = commandManager.buildChain(matchText)
+        if (chain == null || chain.commands.isEmpty()) {
+            source.safeRecycle()
+            return
+        }
+
         when (command.type) {
             CommandType.TEXT_REPLACER -> {
+                if (chain.commands.size > 1) {
+                    // The text-replacer is one stage inside a chain ("?sig ?formal" etc.) — the
+                    // whole chain goes through the multi-stage executor, which applies the
+                    // replacer's prompt to the accumulator exactly like the single path.
+                    if (!isProcessing.compareAndSet(false, true)) {
+                        source.safeRecycle()
+                        return
+                    }
+                    startWatchdog()
+                    cancelPendingProcessingReset()
+                    currentJob?.cancel()
+                    currentJob = executeCommandChain(source, chain, eventPackage)
+                    return
+                }
                 if (!isProcessing.compareAndSet(false, true)) {
                     source.safeRecycle()
                     return
@@ -306,7 +455,7 @@ class AssistantService : AccessibilityService() {
                                 lastOriginalText = precedingText
                                 lastUndoSourceId = sourceId(source)
                                 performHapticFeedback(HapticFeedbackConstants.CONFIRM)
-                                statsManager.recordUsage(command.trigger)
+                                statsManager.recordUsage(command.trigger, eventPackage)
                             }
                         }
                     } catch (e: CancellationException) {
@@ -327,8 +476,47 @@ class AssistantService : AccessibilityService() {
                 }
             }
             CommandType.AI -> {
-                if (cleanText.isEmpty()) {
+                // Translate is the parameterized trigger: its language argument is typed
+                // one keystroke at a time, and intermediate prefixes can be valid entries
+                // ("hi" of "hindi"). Never act on the first match — hold the match until
+                // the typing pauses; each new translate event simply re-arms the timer.
+                if (command.trigger.startsWith(cachedTranslatePrefix)) {
+                    scheduleTranslateCommit(source, cleanText, command, eventPackage)
+                    return
+                }
+                // Screen commands read the window as context: typing just the trigger with
+                // nothing in front of it ("?reply") is the normal way to invoke them.
+                if (cleanText.isEmpty() && !command.readsScreen) {
                     source.safeRecycle()
+                    return
+                }
+                if (command.readsScreen) {
+                    // A screen command always runs alone — stacking stages over a snapshot
+                    // has no defined semantics, and the snapshot path owns the field start
+                    // to finish like a lone AI command does.
+                    if (!isProcessing.compareAndSet(false, true)) {
+                        Log.d(TAG, "screen command skipped: already processing")
+                        source.safeRecycle()
+                        return
+                    }
+                    startWatchdog()
+                    cancelPendingProcessingReset()
+                    currentJob?.cancel()
+                    Log.d(TAG, "screen command start: cleanText='" + cleanText + "'")
+                    processCommand(source, cleanText, command, eventPackage)
+                    return
+                }
+                if (chain.commands.size > 1) {
+                    // Multiple trailing triggers: inner stages transform the text, the
+                    // outermost stage produces what finally lands in the field.
+                    if (!isProcessing.compareAndSet(false, true)) {
+                        source.safeRecycle()
+                        return
+                    }
+                    startWatchdog()
+                    cancelPendingProcessingReset()
+                    currentJob?.cancel()
+                    currentJob = executeCommandChain(source, chain, eventPackage)
                     return
                 }
                 if (!isProcessing.compareAndSet(false, true)) {
@@ -338,7 +526,7 @@ class AssistantService : AccessibilityService() {
                 startWatchdog()
                 cancelPendingProcessingReset()
                 currentJob?.cancel()
-                processCommand(source, cleanText, command)
+                processCommand(source, cleanText, command, eventPackage)
             }
         }
     }
@@ -467,7 +655,12 @@ class AssistantService : AccessibilityService() {
         return true
     }
 
-    private fun processCommand(source: AccessibilityNodeInfo, text: String, command: Command) {
+    private fun processCommand(
+        source: AccessibilityNodeInfo,
+        text: String,
+        command: Command,
+        appPackage: String? = null
+    ) {
         if (!keyManager.keystoreAvailable) {
             // keys_keystore_error rather than toast_keystore_unavailable: the latter tells the
             // user to reinstall, which destroys every key, command and setting, and does not
@@ -484,23 +677,63 @@ class AssistantService : AccessibilityService() {
             val thisJob = coroutineContext[Job]
             val originalText = text
             var spinnerJob: Job? = null
+            // Streaming: when enabled, the field is live-rewritten as chunks land instead
+            // of a spinner holding it. The final write is STILL the verified
+            // [replaceText] — live frames only make the wait visible.
+            val streamingOn = try {
+                getSharedPreferences("settings", MODE_PRIVATE)
+                    .getBoolean(PrefKeys.STREAMING_ENABLED, true)
+            } catch (_: Exception) { true }
+            val renderer = if (streamingOn) StreamRenderer(serviceScope, source) else null
             try {
+                // Screen commands first photograph the current window — BEFORE anything
+                // touches the field (spinner/stream writes would otherwise appear inside
+                // the "conversation" they are about to read). Node access is main-thread
+                // only (Dispatchers.IO scope rarely matters, but the window root can be
+                // recycled between binds, so guard the whole read).
+                var userMessage = originalText
+                if (command.readsScreen) {
+                    val snapshot = withContext(Dispatchers.Main) {
+                        val root = try {
+                            rootInActiveWindow
+                        } catch (_: Exception) { null }
+                        try {
+                            ScreenTextReader.read(root)
+                        } finally {
+                            root?.safeRecycle()
+                        }
+                    }
+                    if (snapshot == null) {
+                        Log.d(TAG, "screen snapshot: EMPTY (nothing readable)")
+                        performHapticFeedback(HapticFeedbackConstants.REJECT)
+                        showToast(getString(R.string.screen_read_failed))
+                        return@launch
+                    }
+                    Log.d(TAG, "screen snapshot: " + snapshot.lineCount + " lines, " +
+                        snapshot.text.length + " chars")
+                    userMessage = ScreenTextReader.composeUserMessage(originalText, snapshot.text)
+                }
                 val outcome = withTimeout(90_000) {
                     runTextCommand(
                         applicationContext, keyManager, client, openAIClient,
-                        command.prompt, text
-                    ) { spinnerJob = startInlineSpinner(source, originalText) }
+                        command.prompt, userMessage,
+                        onFirstAttempt = { spinnerJob = startInlineSpinner(source, originalText) },
+                        onDelta = renderer?.let { r -> { soFar: String, _: Int -> r.onDelta(soFar) } },
+                        screenMode = command.readsScreen
+                    )
                 }
-                // From the first attempt onward the field holds the spinner glyph instead of the
-                // user's text, so every outcome below starts by taking it back out. No spinner
-                // means no usable key was ever found and the field was never touched — a failed
-                // no-op write must not produce a "could not restore your text" prefix.
-                val fieldWasAltered = spinnerJob != null
+                // From the first attempt onward the field holds the spinner glyph (or the
+                // live stream) instead of the user's text, so every outcome below starts by
+                // taking it back out. Neither marker means nothing was ever written — a
+                // failed no-op write must not produce a "could not restore your text" prefix.
+                val fieldWasAltered = spinnerJob != null || (renderer?.sawDeltas ?: false)
                 spinnerJob?.cancelAndJoin()
                 spinnerJob = null
+                renderer?.stop()
 
                 when (outcome) {
                     is CommandOutcome.Success -> {
+                        Log.d(TAG, "screen/AI outcome: Success")
                         if (!replaceText(source, outcome.text)) {
                             // The field rejected the write. Restore the user's text, and don't
                             // record an undo point or a CONFIRM haptic for text that never landed.
@@ -511,17 +744,22 @@ class AssistantService : AccessibilityService() {
                             lastOriginalText = originalText
                             lastUndoSourceId = sourceId(source)
                             performHapticFeedback(HapticFeedbackConstants.CONFIRM)
-                            statsManager.recordUsage(command.trigger)
+                            statsManager.recordUsage(command.trigger, appPackage)
                         }
                     }
                     is CommandOutcome.Refusal -> {
+                        Log.d(TAG, "screen/AI outcome: Refusal")
                         replaceText(source, originalText)
                         performHapticFeedback(HapticFeedbackConstants.REJECT)
                         showToast(getString(R.string.error_safety_blocked))
                     }
                     // Nothing was sent, so there is nothing to restore.
-                    is CommandOutcome.Unavailable -> showToast(outcome.message)
+                    is CommandOutcome.Unavailable -> {
+                        Log.d(TAG, "screen/AI outcome: Unavailable")
+                        showToast(outcome.message)
+                    }
                     is CommandOutcome.Failure -> {
+                        Log.d(TAG, "screen/AI outcome: Failure: " + outcome.message)
                         val restoredOk = !fieldWasAltered || replaceText(source, originalText)
                         performHapticFeedback(HapticFeedbackConstants.REJECT)
                         showToast(
@@ -532,6 +770,7 @@ class AssistantService : AccessibilityService() {
                 }
             } catch (e: TimeoutCancellationException) {
                 spinnerJob?.cancelAndJoin()
+                renderer?.stop()
                 // If the restore fails the field is left holding the spinner glyph, which
                 // matters more to the user than the timeout itself — say so rather than
                 // swallowing it (both strings already exist in every locale).
@@ -543,6 +782,7 @@ class AssistantService : AccessibilityService() {
                 )
             } catch (e: CancellationException) {
                 withContext(NonCancellable + Dispatchers.Main) {
+                    renderer?.stop()
                     spinnerJob?.cancel()
                     // Only restore if this job still owns the field. The watchdog clears
                     // isProcessing as soon as it cancels, so a new command can start while this
@@ -555,6 +795,7 @@ class AssistantService : AccessibilityService() {
                 throw e
             } catch (e: Exception) {
                 spinnerJob?.cancelAndJoin()
+                renderer?.stop()
                 // showToast() dismisses any visible toast first, so the previous code's
                 // restore-failure toast was destroyed microseconds later by the error toast
                 // below — making it unreadable. Combine them instead.
@@ -568,11 +809,157 @@ class AssistantService : AccessibilityService() {
                         cancelWatchdog()
                         scheduleProcessingReset()
                     }
+                    renderer?.stop()
                     spinnerJob?.cancel()
                     recycleIfUnowned(source)
                 }
             }
         }
+    }
+
+    /**
+     * Runs a resolved chain of stages inner→outer and writes the final accumulator once.
+     *
+     * Stage semantics mirror the single-command paths: a TEXT_REPLACER stage appends its
+     * prompt to the running text (the snippet-expansion behaviour of a lone replacer), and an
+     * AI stage transforms the running text through [runTextCommand]. The field is only touched
+     * twice at most: the inline spinner's writes (first AI stage) and the final replacement —
+     * intermediate stages never write, so a mid-chain failure leaves the user's text pristine.
+     *
+     * On failure the field is restored to the state it had when the spinner started (or the
+     * raw pre-trigger text when no stage touched it), then the failure toast fires — the same
+     * contract the single-command restore path honors.
+     */
+    private fun executeCommandChain(
+        source: AccessibilityNodeInfo,
+        chain: CommandChain,
+        appPackage: String?
+    ): Job {
+        return serviceScope.launch {
+            val thisJob = coroutineContext[Job]
+            var spinnerJob: Job? = null
+            var restoreText = chain.baseText
+            try {
+                var acc = chain.baseText
+                var fieldWrittenBySpinner = false
+                var chainAborted = false
+
+                for (stage in chain.commands) {
+                    if (chainAborted) break
+                    when (stage.type) {
+                        CommandType.TEXT_REPLACER -> {
+                            acc = joinStageText(acc, stage.prompt)
+                            statsManager.recordUsage(stage.trigger, appPackage)
+                        }
+                        CommandType.AI -> {
+                            if (acc.isEmpty()) {
+                                // Nothing to send — same reason the single path refuses
+                                // cleanText.isEmpty() before touching the service.
+                                spinnerJob?.cancelAndJoin()
+                                spinnerJob = null
+                                chainAborted = true
+                                break
+                            }
+                            val outcome = withTimeout(90_000) {
+                                runTextCommand(
+                                    applicationContext, keyManager, client, openAIClient,
+                                    stage.prompt, acc,
+                                    onFirstAttempt = {
+                                        if (spinnerJob == null) {
+                                            // Snapshot for restore BEFORE the spinner overwrites the
+                                            // field: everything applied so far (replacer stages too).
+                                            restoreText = acc
+                                            spinnerJob = startInlineSpinner(source, acc)
+                                            fieldWrittenBySpinner = true
+                                        }
+                                    }
+                                )
+                            }
+                            spinnerJob?.cancelAndJoin()
+                            spinnerJob = null
+                            when (outcome) {
+                                is CommandOutcome.Success -> {
+                                    acc = outcome.text
+                                    statsManager.recordUsage(stage.trigger, appPackage)
+                                }
+                                is CommandOutcome.Refusal -> {
+                                    performHapticFeedback(HapticFeedbackConstants.REJECT)
+                                    showToast(getString(R.string.error_safety_blocked))
+                                    chainAborted = true
+                                }
+                                is CommandOutcome.Unavailable -> {
+                                    showToast(outcome.message)
+                                    chainAborted = true
+                                }
+                                is CommandOutcome.Failure -> {
+                                    performHapticFeedback(HapticFeedbackConstants.REJECT)
+                                    showToast(outcome.message)
+                                    chainAborted = true
+                                }
+                            }
+                        }
+                    }
+                }
+
+                val finalText = acc
+                if (!chainAborted) {
+                    val wrote = withContext(Dispatchers.Main) { replaceText(source, finalText) }
+                    if (!wrote) {
+                        performHapticFeedback(HapticFeedbackConstants.REJECT)
+                        showToast(getString(R.string.toast_replace_failed))
+                        // Mirror the single path's restore-for-failed-write so the field does
+                        // not keep whatever a spinner stage left in it.
+                        if (fieldWrittenBySpinner) {
+                            replaceText(source, restoreText)
+                        }
+                    } else {
+                        lastOriginalText = chain.baseText
+                        lastUndoSourceId = sourceId(source)
+                        performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+                    }
+                } else if (fieldWrittenBySpinner) {
+                    // A stage refused/failed after the spinner had touched the field: put
+                    // back what the user was about to have transformed.
+                    withContext(Dispatchers.Main) { replaceText(source, restoreText) }
+                }
+            } catch (e: TimeoutCancellationException) {
+                spinnerJob?.cancelAndJoin()
+                var restoreFailed = false
+                try { restoreFailed = !replaceText(source, restoreText) } catch (_: Exception) { restoreFailed = true }
+                showToast(
+                    if (restoreFailed) getString(R.string.toast_restore_failed) + "\n" + getString(R.string.toast_request_timed_out)
+                    else getString(R.string.toast_request_timed_out)
+                )
+            } catch (e: CancellationException) {
+                withContext(NonCancellable + Dispatchers.Main) {
+                    spinnerJob?.cancel()
+                    if (currentJob === thisJob) {
+                        try { replaceText(source, restoreText) } catch (_: Exception) {}
+                    }
+                }
+                throw e
+            } catch (e: Exception) {
+                spinnerJob?.cancelAndJoin()
+                withContext(Dispatchers.Main) { replaceText(source, restoreText) }
+                showToast(mapErrorMessage(e.message ?: "Unknown error"))
+            } finally {
+                withContext(NonCancellable + Dispatchers.Main) {
+                    if (currentJob === thisJob) {
+                        cancelWatchdog()
+                        scheduleProcessingReset()
+                    }
+                    spinnerJob?.cancel()
+                    recycleIfUnowned(source)
+                }
+            }
+        }
+    }
+
+    /** Replacer-stage join: "a" + ["b"] = "a b", empty sides handled by the survivor alone. */
+    private fun joinStageText(text: String, replacement: String): String {
+        if (text.isEmpty()) return replacement
+        if (replacement.isEmpty()) return text
+        return "$text $replacement"
     }
 
     private fun handleUndo(source: AccessibilityNodeInfo, currentText: String) {
@@ -632,7 +1019,7 @@ class AssistantService : AccessibilityService() {
                             if (wrote) {
                                 lastCopiedText = textToCopy
                                 withContext(Dispatchers.Main) {
-                                    clipboard.setPrimaryClip(ClipData.newPlainText("SwiftSlate", textToCopy))
+                                    clipboard.setPrimaryClip(ClipData.newPlainText("Ghostwriter", textToCopy))
                                 }
                                 performHapticFeedback(HapticFeedbackConstants.CONFIRM)
                                 showToast(getString(R.string.toast_copied))
@@ -657,7 +1044,7 @@ class AssistantService : AccessibilityService() {
                                 lastOriginalText = precedingText
                                 lastUndoSourceId = sourceId(source)
                                 withContext(Dispatchers.Main) {
-                                    clipboard.setPrimaryClip(ClipData.newPlainText("SwiftSlate", textToCut))
+                                    clipboard.setPrimaryClip(ClipData.newPlainText("Ghostwriter", textToCut))
                                 }
                                 performHapticFeedback(HapticFeedbackConstants.CONFIRM)
                                 showToast(getString(R.string.toast_cut))
@@ -671,6 +1058,25 @@ class AssistantService : AccessibilityService() {
                     }
                     trigger.endsWith("paste") -> handlePasteInto(source, precedingText, keepPrefix = precedingText, command = command)
                     trigger.endsWith("replace") -> handlePasteInto(source, precedingText, keepPrefix = "", command = command)
+                    trigger.endsWith("clear") -> {
+                        // Erase the WHOLE field — the user's text AND the trigger itself —
+                        // without touching the clipboard: unlike cut, nothing is copied.
+                        val wiped = withContext(Dispatchers.Main) {
+                            replaceText(source, "")
+                        }
+                        if (wiped) {
+                            // Undo restores what the user had typed, without the trigger
+                            // (same convention as cut).
+                            lastOriginalText = precedingText
+                            lastUndoSourceId = sourceId(source)
+                            performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+                            showToast(getString(R.string.toast_cleared))
+                            statsManager.recordUsage(command.trigger)
+                        } else {
+                            performHapticFeedback(HapticFeedbackConstants.REJECT)
+                            showToast(getString(R.string.toast_replace_failed))
+                        }
+                    }
                 }
             } catch (e: CancellationException) {
                 throw e
@@ -836,7 +1242,7 @@ class AssistantService : AccessibilityService() {
         // Clipboard fallback: select all + paste (goes through app's input pipeline)
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val oldClip = clipboard.primaryClip
-        val newClip = ClipData.newPlainText("SwiftSlate Result", newText)
+        val newClip = ClipData.newPlainText("Ghostwriter Result", newText)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             newClip.description.extras = android.os.PersistableBundle().apply {
                 putBoolean("android.content.extra.IS_SENSITIVE", true)
@@ -903,7 +1309,7 @@ class AssistantService : AccessibilityService() {
         try {
             val current = clipboard.primaryClip?.getItemAt(0)?.text?.toString()
             if (current != null && current != ourText) return // user copied something newer
-            val recovered = oldClip ?: lastCopiedText?.let { ClipData.newPlainText("SwiftSlate", it) }
+            val recovered = oldClip ?: lastCopiedText?.let { ClipData.newPlainText("Ghostwriter", it) }
             clipboard.setPrimaryClip(recovered ?: ClipData.newPlainText("", ""))
         } catch (_: Exception) {}
     }
@@ -1052,6 +1458,11 @@ class AssistantService : AccessibilityService() {
 
     override fun onDestroy() {
         super.onDestroy()
+        // Say "stopped" BEFORE releasing anything: the shutdown path below can throw on an
+        // already-broken teardown, and the notification must not depend on this method
+        // surviving. System-initiated kills, MIUI recycles, app updates — all funnel here,
+        // so the shade always ends in the truthful stopped state.
+        KeepAlive.postStopped(this)
         flushPendingClipRestore()
         isProcessing.set(false)
         lastReplacedText = null
@@ -1062,4 +1473,67 @@ class AssistantService : AccessibilityService() {
         overlayToast.dismiss()
         serviceScope.cancel()
     }
+}
+
+/**
+ * Live redraws the target field while an AI command streams.
+ *
+ * Writes bypass [AssistantService.replaceText]'s verified path on purpose — verification
+ * sleeps 100-500ms per call, which would turn each streamed chunk into a slideshow, and
+ * its clipboard fallback would scribble partial text into the user's clipboard on hosts
+ * that ignore ACTION_SET_TEXT. Live frames instead reuse [AssistantService.setFieldText]
+ * (the same no-delay direct write the inline spinner performs), throttled to ~8 fps by
+ * writing the LATEST accumulated text at most every 120ms. The FINAL text always lands
+ * through the verified [AssistantService.replaceText] write, so the last live frame is
+ * cosmetic only: correctness rests on the final write exactly as in the spinner path.
+ *
+ * Failed mid-stream writes are non-terminal: some hosts recycle the node mid-edit; the
+ * renderer stops itself and lets the outcome handling decide what the field ends with.
+ */
+private class StreamRenderer(
+    private val scope: kotlinx.coroutines.CoroutineScope,
+    private val source: AccessibilityNodeInfo
+) {
+    private val latest = java.util.concurrent.atomic.AtomicReference<String?>(null)
+    private val started = java.util.concurrent.atomic.AtomicBoolean(false)
+
+    @Volatile
+    private var job: Job? = null
+
+    /** True once at least one delta arrived — the write-below marker for the caller. */
+    val sawDeltas: Boolean get() = started.get()
+
+    fun onDelta(textSoFar: String) {
+        latest.set(textSoFar)
+        if (started.getAndSet(true)) return
+        job = scope.launch(Dispatchers.Main) {
+            try {
+                while (isActive) {
+                    latest.get()?.let { seen ->
+                        if (!directSetText(source, ApiClientUtils.streamingDisplayText(seen))) cancel()
+                    }
+                    delay(120)
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                cancel()
+            }
+        }
+    }
+
+    suspend fun stop() {
+        job?.cancelAndJoin()
+        job = null
+    }
+}
+
+// [AssistantService.setFieldText] is an instance member of the service; the renderer is a
+// top-level class, so this tiny standalone mirrors it — refresh + ACTION_SET_TEXT, no delay.
+private fun directSetText(source: AccessibilityNodeInfo, text: String): Boolean {
+    if (!source.refresh()) return false
+    val bundle = Bundle().apply {
+        putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, text)
+    }
+    return source.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, bundle)
 }

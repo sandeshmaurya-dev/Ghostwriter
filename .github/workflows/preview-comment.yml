@@ -172,9 +172,9 @@ jobs:
             });
             const artifacts = artData.artifacts || [];
             core.info(`Found ${artifacts.length} artifacts for run ${run.id}: ${artifacts.map(a=>a.name).join(', ')}`);
-            const preview = artifacts.find(a => a.name.startsWith('SwiftSlate-preview-pr'));
+            const preview = artifacts.find(a => a.name.startsWith('Ghostwriter-preview-pr'));
             if (!preview) {
-              core.info('No SwiftSlate-preview-pr* artifact found — skipping. Lint/test-only runs or expired artifact.');
+              core.info('No Ghostwriter-preview-pr* artifact found — skipping. Lint/test-only runs or expired artifact.');
               // Check if any artifact at all
               if (artifacts.length === 0) {
                 core.info('No artifacts — workflow may not have produced preview APK (e.g. paths filter excluded it)');
@@ -225,7 +225,7 @@ jobs:
 
             [Direct download](${artifactUrl}) · [Run](${runUrl}) · \`${artifact}.zip\` → single \`.apk\`, no folders · expires 14d
 
-            Unzip → installs as **SwiftSlate Preview** (\`com.musheer360.swiftslate.preview\`), separate from stable. Enable in Settings → Accessibility.
+            Unzip → installs as **Ghostwriter Preview** (\`com.musheer360.swiftslate.preview\`), separate from stable. Enable in Settings → Accessibility.
 
             <!-- preview-apk pr=${pr} run=${runId} sha=${headSha} -->`;
 

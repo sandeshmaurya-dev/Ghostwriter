@@ -1,57 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SwiftSlate</string>
-    <string name="accessibility_service_label">Assistent SwiftSlate</string>
-    <string name="accessibility_service_desc">Proporciona substitucions de text amb IA a tot el sistema quan s’escriuen ordres de disparador.</string>
+    <string name="app_name">Ghostwriter</string>
+    <string name="accessibility_service_label">Assistent Ghostwriter</string>
+    <string name="accessibility_service_desc">Proporciona substitucions de text amb IA a tot el sistema quan sâ€™escriuen ordres de disparador.</string>
 
     <!-- Dashboard -->
     <string name="dashboard_title">Panell</string>
     <string name="service_status_active">Actiu</string>
     <string name="service_status_inactive">Inactiu</string>
     <string name="service_enable">Activa</string>
-    <string name="dashboard_api_keys_title">Claus API</string>
-    <string name="dashboard_keys_configured">%1$d claus configurades</string>
-    <string name="dashboard_add_key_hint">Afegeix una clau API per començar.</string>
     <string name="dashboard_monthly_requests">Aquest mes</string>
     <string name="dashboard_favorite_command">Ordre principal</string>
-    <string name="dashboard_no_data">—</string>
-    <string name="dashboard_last_7_days">Últims 7 dies</string>
+    <string name="dashboard_no_data">â€”</string>
+    <string name="dashboard_last_7_days">Ãšltims 7 dies</string>
 
     <!-- Keys -->
-    <string name="keys_title">Claus API</string>
-    <string name="keys_api_key_label">Clau API</string>
-    <string name="keys_testing">Provant…</string>
-    <string name="keys_add_key">Afegeix clau</string>
-    <string name="keys_valid_added">S’ha afegit una clau vàlida!</string>
-    <string name="keys_already_added">Aquesta clau ja s’ha afegit</string>
-    <string name="keys_validation_failed">Ha fallat la validació</string>
-    <string name="keys_keystore_error">L’emmagatzematge segur de claus no està disponible en aquest dispositiu. No es poden desar les claus.</string>
-    <string name="keys_custom_endpoint_required">Set the endpoint URL in Settings before adding a key for the Custom provider</string>
-    <string name="keys_get_api_key">Obtén la teva clau API per a %1$s ↗</string>
-    <string name="keys_empty">No s’ha afegit cap clau API</string>
+    <string name="keys_keystore_error">Lâ€™emmagatzematge segur de claus no estÃ  disponible en aquest dispositiu. No es poden desar les claus.</string>
 
     <!-- Commands -->
     <string name="commands_title">Ordres</string>
     <string name="commands_add_custom_title">Afegeix una ordre personalitzada</string>
     <string name="commands_trigger_label">Disparador (p. ex. %1$scode)</string>
-    <string name="commands_prompt_label">Indicació (p. ex. Reescriu com a poema)</string>
+    <string name="commands_prompt_label">IndicaciÃ³ (p. ex. Reescriu com a poema)</string>
     <string name="commands_add_command">Afegeix ordre</string>
     <string name="commands_delete_command">Suprimeix</string>
     <string name="commands_edit_command">Edita</string>
-    <string name="commands_save_command">Desa l’ordre</string>
-    <string name="commands_cancel">Cancel·la</string>
+    <string name="commands_save_command">Desa lâ€™ordre</string>
+    <string name="commands_cancel">CancelÂ·la</string>
     <string name="commands_type_ai">IA</string>
     <string name="commands_type_replacer">Local</string>
-    <string name="commands_replacement_label">Text de substitució (p. ex. myemail@example.com)</string>
+    <string name="commands_replacement_label">Text de substituciÃ³ (p. ex. myemail@example.com)</string>
     <string name="commands_built_in">Integrat</string>
-    <string name="commands_error_prefix">El disparador ha de començar amb \'%1$s\'</string>
+    <string name="commands_error_prefix">El disparador ha de comenÃ§ar amb \'%1$s\'</string>
     <string name="commands_error_duplicate">Ja existeix una ordre amb aquest disparador</string>
-    <string name="commands_error_conflict">Conflicte amb l’ordre existent \'%1$s\' — un disparador és prefix de l’altre</string>
-    <string name="commands_error_empty_trigger">El disparador ha de tenir un nom després del prefix</string>
+    <string name="commands_error_conflict">Conflicte amb lâ€™ordre existent \'%1$s\' â€” un disparador Ã©s prefix de lâ€™altre</string>
+    <string name="commands_error_empty_trigger">El disparador ha de tenir un nom desprÃ©s del prefix</string>
 
     <!-- Settings -->
-    <string name="settings_title">Configuració</string>
-    <string name="settings_provider_title">Proveïdor del model</string>
+    <string name="settings_title">ConfiguraciÃ³</string>
+    <string name="settings_provider_title">ProveÃ¯dor del model</string>
     <string name="settings_provider_gemini">Google Gemini</string>
     <string name="settings_provider_groq">Groq</string>
     <string name="settings_provider_custom">Personalitzat (compatible amb OpenAI)</string>
@@ -60,95 +47,93 @@
     <string name="settings_endpoint_title">Punt final</string>
     <string name="settings_endpoint_placeholder">https://api.example.com/v1</string>
     <string name="settings_model_placeholder">gpt-4o, claude-3-haiku, etc.</string>
-    <string name="settings_trigger_prefix_desc">Símbol utilitzat abans dels noms d’ordre (p. ex. %1$sfix).</string>
-    <string name="settings_prefix_error_length">Ha de ser exactament 1 caràcter</string>
+    <string name="settings_trigger_prefix_desc">SÃ­mbol utilitzat abans dels noms dâ€™ordre (p. ex. %1$sfix).</string>
+    <string name="settings_prefix_error_length">Ha de ser exactament 1 carÃ cter</string>
     <string name="settings_prefix_error_whitespace">No pot ser un espai en blanc</string>
-    <string name="settings_prefix_error_alphanumeric">No pot ser una lletra ni un dígit</string>
-    <string name="settings_endpoint_error_scheme">Ha de començar per https://</string>
-    <string name="settings_endpoint_error_spaces">L’URL no pot contenir espais</string>
+    <string name="settings_prefix_error_alphanumeric">No pot ser una lletra ni un dÃ­git</string>
+    <string name="settings_endpoint_error_scheme">Ha de comenÃ§ar per https://</string>
+    <string name="settings_endpoint_error_spaces">Lâ€™URL no pot contenir espais</string>
 
     <!-- Backup -->
     <string name="backup_desc">Exporta o importa les teves ordres com a fitxer JSON.</string>
     <string name="backup_export">Exporta</string>
     <string name="backup_import">Importa</string>
     <string name="backup_export_success">Ordres exportades correctament</string>
-    <string name="backup_export_error">Ha fallat l’exportació</string>
+    <string name="backup_export_error">Ha fallat lâ€™exportaciÃ³</string>
     <string name="backup_import_success">Ordres importades correctament</string>
-    <string name="backup_import_error">Fitxer de còpia de seguretat no vàlid</string>
-    <string name="backup_import_confirm">Això substituirà totes les teves ordres personalitzades existents. Continues?</string>
-    <string name="backup_import_cancel">Cancel·la</string>
+    <string name="backup_import_error">Fitxer de cÃ²pia de seguretat no vÃ lid</string>
+    <string name="backup_import_confirm">AixÃ² substituirÃ  totes les teves ordres personalitzades existents. Continues?</string>
+    <string name="backup_import_cancel">CancelÂ·la</string>
     <string name="settings_check_updates">Comprova si hi ha actualitzacions</string>
-    <string name="settings_made_by">Fet amb amor per Musheer Alam</string>
+    <string name="settings_made_by">Fet amb amor per Sandesh Maurya</string>
     <string name="settings_sponsor">Patrocina a GitHub</string>
-    <string name="commands_collapse">Col·lapsa</string>
+    <string name="commands_collapse">ColÂ·lapsa</string>
     <string name="commands_expand">Expandeix</string>
-    <string name="commands_search_hint">Cerca ordres…</string>
+    <string name="commands_search_hint">Cerca ordresâ€¦</string>
     <string name="commands_search_close">Tanca la cerca</string>
-    <string name="commands_search_empty">No s’han trobat ordres</string>
+    <string name="commands_search_empty">No sâ€™han trobat ordres</string>
 
     <!-- Delete confirmation -->
     <string name="delete_confirm_command_title">Vols suprimir aquesta ordre?</string>
     <string name="delete_confirm_key_title">Vols suprimir aquesta clau API?</string>
-    <string name="delete_confirm_message">Aquesta acció no es pot desfer.</string>
+    <string name="delete_confirm_message">Aquesta acciÃ³ no es pot desfer.</string>
     <string name="delete_confirm_button">Suprimeix</string>
 
     <!-- Toasts and errors -->
-    <string name="toast_replace_failed">No s’ha pogut substituir el text</string>
-    <string name="toast_custom_not_configured">El proveïdor personalitzat no està configurat. Defineix el punt final i el model a Configuració.</string>
-    <string name="toast_key_rate_limited">Clau API amb límit de freqüència. Torna-ho a provar en %1$ds</string>
+    <string name="toast_replace_failed">No sâ€™ha pogut substituir el text</string>
+    <string name="toast_custom_not_configured">El proveÃ¯dor personalitzat no estÃ  configurat. Defineix el punt final i el model a ConfiguraciÃ³.</string>
+    <string name="toast_key_rate_limited">Clau API amb lÃ­mit de freqÃ¼Ã¨ncia. Torna-ho a provar en %1$ds</string>
     <string name="toast_no_keys">No hi ha cap clau API configurada</string>
-    <string name="toast_all_keys_invalid">Totes les claus API no són vàlides. Comprova les teves claus</string>
-    <string name="toast_request_timed_out">La sol·licitud ha esgotat el temps d’espera</string>
+    <string name="toast_all_keys_invalid">Totes les claus API no sÃ³n vÃ lides. Comprova les teves claus</string>
+    <string name="toast_request_timed_out">La solÂ·licitud ha esgotat el temps dâ€™espera</string>
     <string name="process_text_title">Aplica una ordre</string>
     <string name="process_text_replace">Substitueix</string>
     <string name="process_text_copy">Copia</string>
     <string name="process_text_back">Enrere</string>
     <string name="process_text_retry">Torna-ho a provar</string>
-    <string name="process_text_copied">S’ha copiat</string>
+    <string name="process_text_copied">Sâ€™ha copiat</string>
     <string name="process_text_no_selection">No hi ha text seleccionat</string>
-    <string name="process_text_no_commands">No hi ha ordres disponibles. Afegeix-ne una a SwiftSlate.</string>
-    <string name="toast_restore_failed">No s’ha pogut restaurar el text original</string>
+    <string name="process_text_no_commands">No hi ha ordres disponibles. Afegeix-ne una a Ghostwriter.</string>
+    <string name="toast_restore_failed">No sâ€™ha pogut restaurar el text original</string>
     <string name="toast_nothing_to_undo">No hi ha res per desfer</string>
-    <string name="toast_undo_failed">No s’ha pogut desfer</string>
+    <string name="toast_undo_failed">No sâ€™ha pogut desfer</string>
     <string name="toast_nothing_to_copy">No hi ha res per copiar</string>
     <string name="toast_copied">Copiat al porta-retalls</string>
     <string name="toast_nothing_to_cut">No hi ha res per retallar</string>
     <string name="toast_cut">Retallat al porta-retalls</string>
-    <string name="toast_clipboard_empty">El porta-retalls és buit</string>
-    <string name="toast_clipboard_failed">L’operació del porta-retalls ha fallat</string>
-    <string name="error_no_model_access">La teva clau API no té accés a aquest model.</string>
-    <string name="error_invalid_key">Clau API no vàlida. Comprova la teva clau a Configuració.</string>
+    <string name="toast_clipboard_empty">El porta-retalls Ã©s buit</string>
+    <string name="toast_clipboard_failed">Lâ€™operaciÃ³ del porta-retalls ha fallat</string>
+    <string name="error_no_model_access">La teva clau API no tÃ© accÃ©s a aquest model.</string>
+    <string name="error_invalid_key">Clau API no vÃ lida. Comprova la teva clau a ConfiguraciÃ³.</string>
     <string name="error_invalid_key_with_hint">Invalid API key (%1$s). Please check your keys in Settings.</string>
-    <string name="error_rate_limited">Límit de freqüència assolit. Torna-ho a provar aviat.</string>
-    <string name="error_model_not_found">No s’ha trobat el model. Comprova la selecció de model a Configuració.</string>
+    <string name="error_rate_limited">LÃ­mit de freqÃ¼Ã¨ncia assolit. Torna-ho a provar aviat.</string>
+    <string name="error_model_not_found">No sâ€™ha trobat el model. Comprova la selecciÃ³ de model a ConfiguraciÃ³.</string>
     <string name="error_safety_blocked">Resposta bloquejada pels filtres de seguretat. Prova de reformular-la.</string>
     <string name="error_empty_response">El model ha retornat una resposta buida. Torna-ho a provar.</string>
-    <string name="error_timeout_connection">La sol·licitud ha esgotat el temps d’espera. Comprova la connexió.</string>
-    <string name="error_no_internet">No hi ha connexió a internet.</string>
-    <string name="error_endpoint_unreachable">No s’ha pogut accedir a l’API. Comprova l’URL del punt final.</string>
-    <string name="error_bad_request">La sol·licitud ha fallat. Comprova la configuració.</string>
+    <string name="error_timeout_connection">La solÂ·licitud ha esgotat el temps dâ€™espera. Comprova la connexiÃ³.</string>
+    <string name="error_no_internet">No hi ha connexiÃ³ a internet.</string>
+    <string name="error_endpoint_unreachable">No sâ€™ha pogut accedir a lâ€™API. Comprova lâ€™URL del punt final.</string>
+    <string name="error_bad_request">La solÂ·licitud ha fallat. Comprova la configuraciÃ³.</string>
 
     <!-- Updates -->
-    <string name="update_channel_name">Actualitzacions de l\'aplicació</string>
-    <string name="update_channel_desc">Avisa quan hi ha disponible una nova versió de SwiftSlate</string>
-    <string name="update_available_title">Hi ha una actualització de SwiftSlate disponible</string>
-    <string name="update_available_text">Toca per veure l\'última versió</string>
+    <string name="update_channel_name">Actualitzacions de l\'aplicaciÃ³</string>
+    <string name="update_channel_desc">Avisa quan hi ha disponible una nova versiÃ³ de Ghostwriter</string>
+    <string name="update_available_title">Hi ha una actualitzaciÃ³ de Ghostwriter disponible</string>
+    <string name="update_available_text">Toca per veure l\'Ãºltima versiÃ³</string>
 
     <!-- Command descriptions -->
-    <string name="error_input_too_long">El text és massa llarg per al límit de tokens per minut d\'aquest model. Torna-ho a provar amb un text més curt.</string>
+    <string name="error_input_too_long">El text Ã©s massa llarg per al lÃ­mit de tokens per minut d\'aquest model. Torna-ho a provar amb un text mÃ©s curt.</string>
     <string name="note_response_truncated">[Nota: la resposta pot estar tallada]</string>
-    <string name="error_provider_auth_required">El servidor ha rebutjat la sol·licitud. Si és un servidor al núvol, inicia la sessió al mateix servidor (p. ex. «ollama signin»).</string>
-    <string name="keys_endpoint_needs_v1">El servidor és accessible, però l\'adreça ha d\'acabar amb /v1 (p. ex. http://host:11434/v1).</string>
-    <string name="settings_fetch_models">Obtén els models</string>
-    <string name="settings_fetch_models_loading">S\'obtenen…</string>
+    <string name="error_provider_auth_required">El servidor ha rebutjat la solÂ·licitud. Si Ã©s un servidor al nÃºvol, inicia la sessiÃ³ al mateix servidor (p. ex. Â«ollama signinÂ»).</string>    <string name="settings_fetch_models">ObtÃ©n els models</string>
+    <string name="settings_fetch_models_loading">S\'obtenenâ€¦</string>
     <string name="settings_fetch_models_success">S\'han carregat %1$d models</string>
     <string name="settings_fetch_models_empty">No s\'ha trobat cap model. Podeu introduir-ne un manualment.</string>
-    <string name="settings_fetch_models_failed">No s\'han pogut obtenir els models. Comproveu l\'adreça i la clau d\'API.</string>
+    <string name="settings_fetch_models_failed">No s\'han pogut obtenir els models. Comproveu l\'adreÃ§a i la clau d\'API.</string>
     <string name="settings_models_refresh">Actualitza</string>
     <string name="settings_models_need_key">Afegeix una clau d\'API a dalt per carregar la llista de models.</string>
-    <string name="settings_models_load_failed">No s\'han pogut carregar els models. Comproveu la connexió i la clau d\'API.</string>
+    <string name="settings_models_load_failed">No s\'han pogut carregar els models. Comproveu la connexiÃ³ i la clau d\'API.</string>
     <string name="settings_models_empty_provider">Cap model disponible per a aquesta clau d\'API.</string>
-    <string name="dashboard_service_killed_title">S\'ha interromput SwiftSlate</string>
-    <string name="dashboard_service_killed_message">El servei en segon pla s\'ha aturat de manera inesperada. Torneu a activar-lo als paràmetres d\'accessibilitat per continuar fent servir les ordres.</string>
+    <string name="dashboard_service_killed_title">S\'ha interromput Ghostwriter</string>
+    <string name="dashboard_service_killed_message">El servei en segon pla s\'ha aturat de manera inesperada. Torneu a activar-lo als parÃ metres d\'accessibilitat per continuar fent servir les ordres.</string>
     <string name="dashboard_service_killed_dismiss">Ignora</string>
 </resources>

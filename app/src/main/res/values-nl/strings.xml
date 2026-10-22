@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SwiftSlate</string>
-    <string name="accessibility_service_label">SwiftSlate-assistent</string>
+    <string name="app_name">Ghostwriter</string>
+    <string name="accessibility_service_label">Ghostwriter-assistent</string>
     <string name="accessibility_service_desc">Biedt systeembrede AI-tekstvervangingen wanneer triggeropdrachten worden getypt.</string>
 
     <!-- Dashboard -->
@@ -9,26 +9,13 @@
     <string name="service_status_active">Actief</string>
     <string name="service_status_inactive">Inactief</string>
     <string name="service_enable">Inschakelen</string>
-    <string name="dashboard_api_keys_title">API-sleutels</string>
-    <string name="dashboard_keys_configured">%1$d sleutels geconfigureerd</string>
-    <string name="dashboard_add_key_hint">Voeg een API-sleutel toe om te beginnen.</string>
     <string name="dashboard_monthly_requests">Deze maand</string>
     <string name="dashboard_favorite_command">Topopdracht</string>
-    <string name="dashboard_no_data">—</string>
+    <string name="dashboard_no_data">â€”</string>
     <string name="dashboard_last_7_days">Laatste 7 dagen</string>
 
     <!-- Keys -->
-    <string name="keys_title">API-sleutels</string>
-    <string name="keys_api_key_label">API-sleutel</string>
-    <string name="keys_testing">Testen…</string>
-    <string name="keys_add_key">Sleutel toevoegen</string>
-    <string name="keys_valid_added">Geldige sleutel toegevoegd!</string>
-    <string name="keys_already_added">Deze sleutel is al toegevoegd</string>
-    <string name="keys_validation_failed">Validatie mislukt</string>
     <string name="keys_keystore_error">Veilige sleutelopslag is niet beschikbaar op dit apparaat. Sleutels kunnen niet worden opgeslagen.</string>
-    <string name="keys_custom_endpoint_required">Set the endpoint URL in Settings before adding a key for the Custom provider</string>
-    <string name="keys_get_api_key">Haal uw %1$s API-sleutel op ↗</string>
-    <string name="keys_empty">Geen API-sleutels toegevoegd</string>
 
     <!-- Commands -->
     <string name="commands_title">Opdrachten</string>
@@ -46,7 +33,7 @@
     <string name="commands_built_in">Ingebouwd</string>
     <string name="commands_error_prefix">Trigger moet beginnen met \'%1$s\'</string>
     <string name="commands_error_duplicate">Er bestaat al een opdracht met deze trigger</string>
-    <string name="commands_error_conflict">Conflict met bestaande opdracht \'%1$s\' — de ene trigger is een voorvoegsel van de andere</string>
+    <string name="commands_error_conflict">Conflict met bestaande opdracht \'%1$s\' â€” de ene trigger is een voorvoegsel van de andere</string>
     <string name="commands_error_empty_trigger">Trigger moet een naam hebben na het voorvoegsel</string>
 
     <!-- Settings -->
@@ -60,7 +47,7 @@
     <string name="settings_endpoint_title">Endpoint</string>
     <string name="settings_endpoint_placeholder">https://api.example.com/v1</string>
     <string name="settings_model_placeholder">gpt-4o, claude-3-haiku, enz.</string>
-    <string name="settings_trigger_prefix_desc">Symbool gebruikt vóór opdrachtnamen (bijv. %1$sfix).</string>
+    <string name="settings_trigger_prefix_desc">Symbool gebruikt vÃ³Ã³r opdrachtnamen (bijv. %1$sfix).</string>
     <string name="settings_prefix_error_length">Moet exact 1 teken zijn</string>
     <string name="settings_prefix_error_whitespace">Kan geen spatie zijn</string>
     <string name="settings_prefix_error_alphanumeric">Kan geen letter of cijfer zijn</string>
@@ -71,18 +58,18 @@
     <string name="backup_desc">Exporteer of importeer uw opdrachten als een JSON-bestand.</string>
     <string name="backup_export">Exporteren</string>
     <string name="backup_import">Importeren</string>
-    <string name="backup_export_success">Opdrachten succesvol geëxporteerd</string>
+    <string name="backup_export_success">Opdrachten succesvol geÃ«xporteerd</string>
     <string name="backup_export_error">Exporteren mislukt</string>
-    <string name="backup_import_success">Opdrachten succesvol geïmporteerd</string>
+    <string name="backup_import_success">Opdrachten succesvol geÃ¯mporteerd</string>
     <string name="backup_import_error">Ongeldig back-upbestand</string>
     <string name="backup_import_confirm">Dit zal al uw bestaande aangepaste opdrachten vervangen. Doorgaan?</string>
     <string name="backup_import_cancel">Annuleren</string>
     <string name="settings_check_updates">Controleren op updates</string>
-    <string name="settings_made_by">Met liefde gemaakt door Musheer Alam</string>
+    <string name="settings_made_by">Met liefde gemaakt door Sandesh Maurya</string>
     <string name="settings_sponsor">Sponsor op GitHub</string>
     <string name="commands_collapse">Inklappen</string>
     <string name="commands_expand">Uitklappen</string>
-    <string name="commands_search_hint">Zoek opdrachten…</string>
+    <string name="commands_search_hint">Zoek opdrachtenâ€¦</string>
     <string name="commands_search_close">Zoeken sluiten</string>
     <string name="commands_search_empty">Geen opdrachten gevonden</string>
 
@@ -101,16 +88,16 @@
     <string name="toast_request_timed_out">Aanvraag verlopen</string>
     <string name="process_text_title">Opdracht toepassen</string>
     <string name="process_text_replace">Vervangen</string>
-    <string name="process_text_copy">Kopiëren</string>
+    <string name="process_text_copy">KopiÃ«ren</string>
     <string name="process_text_back">Terug</string>
     <string name="process_text_retry">Opnieuw proberen</string>
     <string name="process_text_copied">Gekopieerd</string>
     <string name="process_text_no_selection">Geen tekst geselecteerd</string>
-    <string name="process_text_no_commands">Geen opdrachten beschikbaar. Voeg er een toe in SwiftSlate.</string>
+    <string name="process_text_no_commands">Geen opdrachten beschikbaar. Voeg er een toe in Ghostwriter.</string>
     <string name="toast_restore_failed">Kon oorspronkelijke tekst niet herstellen</string>
     <string name="toast_nothing_to_undo">Niets om ongedaan te maken</string>
     <string name="toast_undo_failed">Kon niet ongedaan maken</string>
-    <string name="toast_nothing_to_copy">Niets om te kopiëren</string>
+    <string name="toast_nothing_to_copy">Niets om te kopiÃ«ren</string>
     <string name="toast_copied">Gekopieerd naar klembord</string>
     <string name="toast_nothing_to_cut">Niets om te knippen</string>
     <string name="toast_cut">Geknipt naar klembord</string>
@@ -130,15 +117,13 @@
 
     <!-- Update notifications -->
     <string name="update_channel_name">App-updates</string>
-    <string name="update_channel_desc">Geeft een melding wanneer een nieuwe versie van SwiftSlate beschikbaar is</string>
-    <string name="update_available_title">SwiftSlate-update beschikbaar</string>
+    <string name="update_channel_desc">Geeft een melding wanneer een nieuwe versie van Ghostwriter beschikbaar is</string>
+    <string name="update_available_title">Ghostwriter-update beschikbaar</string>
     <string name="update_available_text">Tik om de nieuwste release te bekijken</string>
     <string name="error_input_too_long">De tekst is te lang voor de tokenlimiet per minuut van dit model. Probeer het opnieuw met kortere tekst.</string>
     <string name="note_response_truncated">[Let op: antwoord is mogelijk afgekapt]</string>
-    <string name="error_provider_auth_required">De server heeft de aanvraag geweigerd. Bij een cloudserver moet je je aanmelden op de server zelf (bijv. „ollama signin“).</string>
-    <string name="keys_endpoint_needs_v1">De server is bereikbaar, maar de URL moet eindigen op /v1 (bijv. http://host:11434/v1).</string>
-    <string name="settings_fetch_models">Modellen ophalen</string>
-    <string name="settings_fetch_models_loading">Ophalen…</string>
+    <string name="error_provider_auth_required">De server heeft de aanvraag geweigerd. Bij een cloudserver moet je je aanmelden op de server zelf (bijv. â€žollama signinâ€œ).</string>    <string name="settings_fetch_models">Modellen ophalen</string>
+    <string name="settings_fetch_models_loading">Ophalenâ€¦</string>
     <string name="settings_fetch_models_success">%1$d modellen geladen</string>
     <string name="settings_fetch_models_empty">Geen modellen gevonden. Je kunt nog steeds handmatig een model invoeren.</string>
     <string name="settings_fetch_models_failed">Modellen konden niet worden opgehaald. Controleer het adres en de API-sleutel.</string>
@@ -146,7 +131,7 @@
     <string name="settings_models_need_key">Voeg hierboven een API-sleutel toe om de modellenlijst te laden.</string>
     <string name="settings_models_load_failed">Kon modellen niet laden. Controleer je verbinding en API-sleutel.</string>
     <string name="settings_models_empty_provider">Geen modellen beschikbaar voor deze API-sleutel.</string>
-    <string name="dashboard_service_killed_title">SwiftSlate is onderbroken</string>
+    <string name="dashboard_service_killed_title">Ghostwriter is onderbroken</string>
     <string name="dashboard_service_killed_message">De achtergrondservice is onverwacht gestopt. Schakel deze opnieuw in bij de toegankelijkheidsinstellingen om opdrachten te blijven gebruiken.</string>
     <string name="dashboard_service_killed_dismiss">Sluiten</string>
 </resources>

@@ -5,6 +5,13 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!--
+        Lets the dashboard offer the direct battery-optimization exemption dialog instead of
+        the flat settings list. Play-sensitive permission: the dashboard presents it INSIDE
+        the keep-alive card with a user-initiated tap (user-initiated exemption requests),
+        which is exactly the usage shape reviewers expect from a survival-focused utility.
+    -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <application
         android:name=".SwiftSlateApp"
@@ -81,6 +88,24 @@
             <meta-data
                 android:name="android.accessibilityservice"
                 android:resource="@xml/accessibility_service_config" />
+        </service>
+
+        <!--
+            Pull-down shade tile. Mirrors the accessibility service's true health (KeepAlive
+            check, including the framework's hidden crashed flag) — OFF means typed triggers
+            would silently do nothing. No one-tap toggle on purpose: MIUI denies shell-level
+            secure-settings writes, so instead of a button that can throw, the tile opens the
+            app (healthy) or the accessibility toggles (stopped).
+        -->
+        <service
+            android:name=".service.GhostwriterTileService"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/tile_app_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
         </service>
     </application>
 

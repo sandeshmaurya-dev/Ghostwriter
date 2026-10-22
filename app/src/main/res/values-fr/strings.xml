@@ -1,33 +1,21 @@
-<resources>
-    <string name="app_name">SwiftSlate</string>
-    <string name="accessibility_service_label">Assistant SwiftSlate</string>
-    <string name="accessibility_service_desc">Fournit des remplacements de texte par IA à l\'échelle du système lorsque des commandes de déclenchement sont saisies.</string>
+﻿<resources>
+    <string name="app_name">Ghostwriter</string>
+    <string name="accessibility_service_label">Assistant Ghostwriter</string>
+    <string name="accessibility_service_desc">Fournit des remplacements de texte par IA Ã  l\'Ã©chelle du systÃ¨me lorsque des commandes de dÃ©clenchement sont saisies.</string>
 
     <!-- Dashboard -->
     <string name="dashboard_title">Tableau de bord</string>
     <string name="service_status_active">Actif</string>
     <string name="service_status_inactive">Inactif</string>
     <string name="service_enable">Activer</string>
-    <string name="dashboard_api_keys_title">Clés API</string>
-    <string name="dashboard_keys_configured">%1$d clés configurées</string>
-    <string name="dashboard_add_key_hint">Ajoutez une clé API pour commencer.</string>
 
     <!-- Keys -->
-    <string name="keys_title">Clés API</string>
-    <string name="keys_api_key_label">Clé API</string>
-    <string name="keys_testing">Test en cours…</string>
-    <string name="keys_add_key">Ajouter une clé</string>
-    <string name="keys_valid_added">Clé valide ajoutée !</string>
-    <string name="keys_already_added">Cette clé a déjà été ajoutée</string>
-    <string name="keys_validation_failed">Échec de la validation</string>
-    <string name="keys_custom_endpoint_required">Configurez l\'URL de l\'endpoint dans les Paramètres avant d\'ajouter une clé pour le fournisseur personnalisé</string>
-    <string name="keys_get_api_key">Obtenez votre clé API %1$s ↗</string>
 
     <!-- Commands -->
     <string name="commands_title">Commandes</string>
-    <string name="commands_add_custom_title">Ajouter une commande personnalisée</string>
-    <string name="commands_trigger_label">Déclencheur (ex. : %1$scode)</string>
-    <string name="commands_prompt_label">Instruction (ex. : Réécrire sous forme de poème)</string>
+    <string name="commands_add_custom_title">Ajouter une commande personnalisÃ©e</string>
+    <string name="commands_trigger_label">DÃ©clencheur (ex. : %1$scode)</string>
+    <string name="commands_prompt_label">Instruction (ex. : RÃ©Ã©crire sous forme de poÃ¨me)</string>
     <string name="commands_add_command">Ajouter la commande</string>
     <string name="commands_delete_command">Supprimer</string>
     <string name="commands_edit_command">Modifier</string>
@@ -36,116 +24,113 @@
     <string name="commands_type_ai">IA</string>
     <string name="commands_type_replacer">Local</string>
     <string name="commands_replacement_label">Texte de remplacement (ex. : myemail@example.com)</string>
-    <string name="commands_built_in">Intégré</string>
-    <string name="commands_error_prefix">Le déclencheur doit commencer par \'%1$s\'</string>
-    <string name="commands_error_duplicate">Une commande avec ce déclencheur existe déjà</string>
-    <string name="commands_error_conflict">Conflit avec la commande existante \'%1$s\' — un déclencheur est un préfixe de l\'autre</string>
-    <string name="commands_error_empty_trigger">Le déclencheur doit avoir un nom après le préfixe</string>
+    <string name="commands_built_in">IntÃ©grÃ©</string>
+    <string name="commands_error_prefix">Le dÃ©clencheur doit commencer par \'%1$s\'</string>
+    <string name="commands_error_duplicate">Une commande avec ce dÃ©clencheur existe dÃ©jÃ </string>
+    <string name="commands_error_conflict">Conflit avec la commande existante \'%1$s\' â€” un dÃ©clencheur est un prÃ©fixe de l\'autre</string>
+    <string name="commands_error_empty_trigger">Le dÃ©clencheur doit avoir un nom aprÃ¨s le prÃ©fixe</string>
 
     <!-- Settings -->
-    <string name="settings_title">Paramètres</string>
+    <string name="settings_title">ParamÃ¨tres</string>
     <string name="settings_provider_title">Fournisseur</string>
     <string name="settings_provider_gemini">Google Gemini</string>
     <string name="settings_provider_groq">Groq</string>
-    <string name="settings_provider_custom">Personnalisé (compatible OpenAI)</string>
-    <string name="settings_model_title">Modèle</string>
+    <string name="settings_provider_custom">PersonnalisÃ© (compatible OpenAI)</string>
+    <string name="settings_model_title">ModÃ¨le</string>
     <string name="settings_endpoint_title">Endpoint</string>
     <string name="settings_endpoint_placeholder">https://api.example.com/v1</string>
     <string name="settings_model_placeholder">gpt-4o, claude-3-haiku, etc.</string>
-    <string name="settings_trigger_prefix_desc">Symbole placé avant le nom de la commande (ex. %1$sfix).</string>
-    <string name="settings_prefix_error_length">Doit être exactement 1 caractère</string>
-    <string name="settings_prefix_error_whitespace">Ne peut pas être un espace</string>
-    <string name="settings_prefix_error_alphanumeric">Ne peut pas être une lettre ou un chiffre</string>
+    <string name="settings_trigger_prefix_desc">Symbole placÃ© avant le nom de la commande (ex. %1$sfix).</string>
+    <string name="settings_prefix_error_length">Doit Ãªtre exactement 1 caractÃ¨re</string>
+    <string name="settings_prefix_error_whitespace">Ne peut pas Ãªtre un espace</string>
+    <string name="settings_prefix_error_alphanumeric">Ne peut pas Ãªtre une lettre ou un chiffre</string>
     <string name="settings_endpoint_error_scheme">Doit commencer par https://</string>
     <string name="settings_endpoint_error_spaces">L\'URL ne peut pas contenir d\'espaces</string>
 
     <!-- Backup -->
-    <string name="backup_desc">Exportez ou importez vos commandes personnalisées sous forme de fichier JSON.</string>
+    <string name="backup_desc">Exportez ou importez vos commandes personnalisÃ©es sous forme de fichier JSON.</string>
     <string name="backup_export">Exporter</string>
     <string name="backup_import">Importer</string>
-    <string name="backup_export_success">Commandes exportées avec succès</string>
-    <string name="backup_import_success">Commandes importées avec succès</string>
+    <string name="backup_export_success">Commandes exportÃ©es avec succÃ¨s</string>
+    <string name="backup_import_success">Commandes importÃ©es avec succÃ¨s</string>
     <string name="backup_import_error">Fichier de sauvegarde invalide</string>
-    <string name="keys_keystore_error">Le stockage sécurisé des clés n\'est pas disponible sur cet appareil. Les clés ne peuvent pas être enregistrées.</string>
-    <string name="backup_import_confirm">Cela remplacera toutes vos commandes personnalisées existantes. Continuer ?</string>
+    <string name="keys_keystore_error">Le stockage sÃ©curisÃ© des clÃ©s n\'est pas disponible sur cet appareil. Les clÃ©s ne peuvent pas Ãªtre enregistrÃ©es.</string>
+    <string name="backup_import_confirm">Cela remplacera toutes vos commandes personnalisÃ©es existantes. Continuer ?</string>
     <string name="backup_import_cancel">Annuler</string>
-    <string name="settings_check_updates">Vérifier les mises à jour</string>
-    <string name="commands_collapse">Réduire</string>
-    <string name="commands_expand">Développer</string>
+    <string name="settings_check_updates">VÃ©rifier les mises Ã  jour</string>
+    <string name="commands_collapse">RÃ©duire</string>
+    <string name="commands_expand">DÃ©velopper</string>
 
     <!-- Delete confirmation -->
     <string name="delete_confirm_command_title">Supprimer cette commande ?</string>
-    <string name="delete_confirm_key_title">Supprimer cette clé API ?</string>
-    <string name="delete_confirm_message">Cette action est irréversible.</string>
+    <string name="delete_confirm_key_title">Supprimer cette clÃ© API ?</string>
+    <string name="delete_confirm_message">Cette action est irrÃ©versible.</string>
     <string name="delete_confirm_button">Supprimer</string>
-    <string name="backup_export_error">Échec de l\'exportation</string>
-    <string name="commands_search_hint">Rechercher des commandes…</string>
+    <string name="backup_export_error">Ã‰chec de l\'exportation</string>
+    <string name="commands_search_hint">Rechercher des commandesâ€¦</string>
     <string name="commands_search_close">Fermer la recherche</string>
-    <string name="commands_search_empty">Aucune commande trouvée</string>
-    <string name="keys_empty">Aucune clé API ajoutée</string>
+    <string name="commands_search_empty">Aucune commande trouvÃ©e</string>
     <string name="dashboard_monthly_requests">Ce mois-ci</string>
     <string name="dashboard_favorite_command">Commande principale</string>
-    <string name="dashboard_no_data">—</string>
+    <string name="dashboard_no_data">â€”</string>
     <string name="dashboard_last_7_days">7 derniers jours</string>
-    <string name="settings_temperature_title">Température</string>
-    <string name="settings_made_by">Fait avec amour par Musheer Alam</string>
+    <string name="settings_temperature_title">TempÃ©rature</string>
+    <string name="settings_made_by">Fait avec amour par Sandesh Maurya</string>
     <string name="settings_sponsor">Sponsoriser sur GitHub</string>
 
     <!-- Toasts and errors -->
     <string name="toast_replace_failed">Impossible de remplacer le texte</string>
-    <string name="toast_custom_not_configured">Fournisseur personnalisé non configuré. Définissez l\'endpoint et le modèle dans les Paramètres.</string>
-    <string name="toast_key_rate_limited">Débit de la clé API limité. Réessayez dans %1$d s</string>
-    <string name="toast_no_keys">Aucune clé API configurée</string>
-    <string name="toast_all_keys_invalid">Toutes les clés API sont invalides. Veuillez vérifier vos clés</string>
-    <string name="toast_request_timed_out">La requête a expiré</string>
+    <string name="toast_custom_not_configured">Fournisseur personnalisÃ© non configurÃ©. DÃ©finissez l\'endpoint et le modÃ¨le dans les ParamÃ¨tres.</string>
+    <string name="toast_key_rate_limited">DÃ©bit de la clÃ© API limitÃ©. RÃ©essayez dans %1$d s</string>
+    <string name="toast_no_keys">Aucune clÃ© API configurÃ©e</string>
+    <string name="toast_all_keys_invalid">Toutes les clÃ©s API sont invalides. Veuillez vÃ©rifier vos clÃ©s</string>
+    <string name="toast_request_timed_out">La requÃªte a expirÃ©</string>
     <string name="process_text_title">Appliquer une commande</string>
     <string name="process_text_replace">Remplacer</string>
     <string name="process_text_copy">Copier</string>
     <string name="process_text_back">Retour</string>
-    <string name="process_text_retry">Réessayer</string>
-    <string name="process_text_copied">Copié</string>
-    <string name="process_text_no_selection">Aucun texte sélectionné</string>
-    <string name="process_text_no_commands">Aucune commande disponible. Ajoutez-en une dans SwiftSlate.</string>
+    <string name="process_text_retry">RÃ©essayer</string>
+    <string name="process_text_copied">CopiÃ©</string>
+    <string name="process_text_no_selection">Aucun texte sÃ©lectionnÃ©</string>
+    <string name="process_text_no_commands">Aucune commande disponible. Ajoutez-en une dans Ghostwriter.</string>
     <string name="toast_restore_failed">Impossible de restaurer le texte d\'origine</string>
-    <string name="toast_nothing_to_undo">Rien à annuler</string>
+    <string name="toast_nothing_to_undo">Rien Ã  annuler</string>
     <string name="toast_undo_failed">Impossible d\'annuler</string>
-    <string name="toast_nothing_to_copy">Rien à copier</string>
-    <string name="toast_copied">Copié dans le presse-papiers</string>
-    <string name="toast_nothing_to_cut">Rien à couper</string>
-    <string name="toast_cut">Coupé dans le presse-papiers</string>
+    <string name="toast_nothing_to_copy">Rien Ã  copier</string>
+    <string name="toast_copied">CopiÃ© dans le presse-papiers</string>
+    <string name="toast_nothing_to_cut">Rien Ã  couper</string>
+    <string name="toast_cut">CoupÃ© dans le presse-papiers</string>
     <string name="toast_clipboard_empty">Le presse-papiers est vide</string>
-    <string name="toast_clipboard_failed">Échec de l\'opération du presse-papiers</string>
-    <string name="error_no_model_access">Votre clé API n\'a pas accès à ce modèle.</string>
-    <string name="error_invalid_key">Clé API invalide. Veuillez vérifier votre clé dans les Paramètres.</string>
-    <string name="error_invalid_key_with_hint">Clé API non valide (%1$s). Veuillez vérifier vos clés dans les paramètres.</string>
-    <string name="error_rate_limited">Débit limité. Réessayez sous peu.</string>
-    <string name="error_model_not_found">Modèle introuvable. Vérifiez la sélection du modèle dans les Paramètres.</string>
-    <string name="error_safety_blocked">Réponse bloquée par les filtres de sécurité. Essayez de reformuler.</string>
-    <string name="error_empty_response">Le modèle a renvoyé une réponse vide. Réessayez.</string>
-    <string name="error_timeout_connection">La requête a expiré. Vérifiez votre connexion.</string>
+    <string name="toast_clipboard_failed">Ã‰chec de l\'opÃ©ration du presse-papiers</string>
+    <string name="error_no_model_access">Votre clÃ© API n\'a pas accÃ¨s Ã  ce modÃ¨le.</string>
+    <string name="error_invalid_key">ClÃ© API invalide. Veuillez vÃ©rifier votre clÃ© dans les ParamÃ¨tres.</string>
+    <string name="error_invalid_key_with_hint">ClÃ© API non valide (%1$s). Veuillez vÃ©rifier vos clÃ©s dans les paramÃ¨tres.</string>
+    <string name="error_rate_limited">DÃ©bit limitÃ©. RÃ©essayez sous peu.</string>
+    <string name="error_model_not_found">ModÃ¨le introuvable. VÃ©rifiez la sÃ©lection du modÃ¨le dans les ParamÃ¨tres.</string>
+    <string name="error_safety_blocked">RÃ©ponse bloquÃ©e par les filtres de sÃ©curitÃ©. Essayez de reformuler.</string>
+    <string name="error_empty_response">Le modÃ¨le a renvoyÃ© une rÃ©ponse vide. RÃ©essayez.</string>
+    <string name="error_timeout_connection">La requÃªte a expirÃ©. VÃ©rifiez votre connexion.</string>
     <string name="error_no_internet">Aucune connexion internet.</string>
-    <string name="error_endpoint_unreachable">Impossible de joindre l\'API. Vérifiez l\'URL de votre endpoint.</string>
-    <string name="error_bad_request">Échec de la requête. Vérifiez vos paramètres.</string>
+    <string name="error_endpoint_unreachable">Impossible de joindre l\'API. VÃ©rifiez l\'URL de votre endpoint.</string>
+    <string name="error_bad_request">Ã‰chec de la requÃªte. VÃ©rifiez vos paramÃ¨tres.</string>
 
     <!-- Updates and command descriptions -->
-    <string name="update_channel_name">Mises à jour de l\'app</string>
-    <string name="update_channel_desc">Avertit lorsqu\'une nouvelle version de SwiftSlate est disponible</string>
-    <string name="update_available_title">Mise à jour SwiftSlate disponible</string>
-    <string name="update_available_text">Appuyez pour voir la dernière version</string>
-    <string name="error_input_too_long">Le texte est trop long pour la limite de jetons par minute de ce modèle. Réessayez avec un texte plus court.</string>
-    <string name="note_response_truncated">[Remarque : la réponse peut être tronquée]</string>
-    <string name="error_provider_auth_required">Le serveur a rejeté la requête. S\'il s\'agit d\'un serveur cloud, connectez-vous sur le serveur lui-même (ex. « ollama signin »).</string>
-    <string name="keys_endpoint_needs_v1">Le serveur est joignable, mais l\'URL doit se terminer par /v1 (ex. http://host:11434/v1).</string>
-    <string name="settings_fetch_models">Récupérer les modèles</string>
-    <string name="settings_fetch_models_loading">Récupération…</string>
-    <string name="settings_fetch_models_success">%1$d modèles chargés</string>
-    <string name="settings_fetch_models_empty">Aucun modèle trouvé. Vous pouvez quand même saisir un modèle manuellement.</string>
-    <string name="settings_fetch_models_failed">Impossible de récupérer les modèles. Vérifiez l\'adresse et la clé API.</string>
+    <string name="update_channel_name">Mises Ã  jour de l\'app</string>
+    <string name="update_channel_desc">Avertit lorsqu\'une nouvelle version de Ghostwriter est disponible</string>
+    <string name="update_available_title">Mise Ã  jour Ghostwriter disponible</string>
+    <string name="update_available_text">Appuyez pour voir la derniÃ¨re version</string>
+    <string name="error_input_too_long">Le texte est trop long pour la limite de jetons par minute de ce modÃ¨le. RÃ©essayez avec un texte plus court.</string>
+    <string name="note_response_truncated">[Remarque : la rÃ©ponse peut Ãªtre tronquÃ©e]</string>
+    <string name="error_provider_auth_required">Le serveur a rejetÃ© la requÃªte. S\'il s\'agit d\'un serveur cloud, connectez-vous sur le serveur lui-mÃªme (ex. Â« ollama signin Â»).</string>    <string name="settings_fetch_models">RÃ©cupÃ©rer les modÃ¨les</string>
+    <string name="settings_fetch_models_loading">RÃ©cupÃ©rationâ€¦</string>
+    <string name="settings_fetch_models_success">%1$d modÃ¨les chargÃ©s</string>
+    <string name="settings_fetch_models_empty">Aucun modÃ¨le trouvÃ©. Vous pouvez quand mÃªme saisir un modÃ¨le manuellement.</string>
+    <string name="settings_fetch_models_failed">Impossible de rÃ©cupÃ©rer les modÃ¨les. VÃ©rifiez l\'adresse et la clÃ© API.</string>
     <string name="settings_models_refresh">Actualiser</string>
-    <string name="settings_models_need_key">Ajoute une clé API ci-dessus pour charger la liste des modèles.</string>
-    <string name="settings_models_load_failed">Impossible de charger les modèles. Vérifie ta connexion et ta clé API.</string>
-    <string name="settings_models_empty_provider">Aucun modèle disponible pour cette clé API.</string>
-    <string name="dashboard_service_killed_title">SwiftSlate a été interrompu</string>
-    <string name="dashboard_service_killed_message">Le service en arrière-plan s\'est arrêté de manière inattendue. Réactivez-le dans les paramètres d\'accessibilité pour continuer à utiliser les commandes.</string>
+    <string name="settings_models_need_key">Ajoute une clÃ© API ci-dessus pour charger la liste des modÃ¨les.</string>
+    <string name="settings_models_load_failed">Impossible de charger les modÃ¨les. VÃ©rifie ta connexion et ta clÃ© API.</string>
+    <string name="settings_models_empty_provider">Aucun modÃ¨le disponible pour cette clÃ© API.</string>
+    <string name="dashboard_service_killed_title">Ghostwriter a Ã©tÃ© interrompu</string>
+    <string name="dashboard_service_killed_message">Le service en arriÃ¨re-plan s\'est arrÃªtÃ© de maniÃ¨re inattendue. RÃ©activez-le dans les paramÃ¨tres d\'accessibilitÃ© pour continuer Ã  utiliser les commandes.</string>
     <string name="dashboard_service_killed_dismiss">Ignorer</string>
 </resources>

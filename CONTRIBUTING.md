@@ -1,19 +1,19 @@
-# Contributing to SwiftSlate
+# Contributing to Ghostwriter
 
 Thanks for wanting to contribute! Here's everything you need to know.
 
 ## Project Philosophy
 
 - **Zero external dependencies** for networking/JSON — use `HttpURLConnection` and `org.json`
-- **Minimal APK size** — currently ~1.4 MB, keep it that way
+- **Minimal APK size** — keep it that way
 - **API 23+ compatibility** — every feature must work on Android 6.0+
-- **Privacy first** — no analytics, no telemetry, no data leaves the device except to the user's configured AI provider
+- **Privacy first** — no analytics, no telemetry. Text only goes to the hosted Ghostwriter Cloud backend when the user types a command, and user-facing code never touches provider credentials
 
 ## Development Setup
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/SwiftSlate.git
-cd SwiftSlate
+git clone https://github.com/sandeshmaurya-dev/Ghostwriter.git
+cd Ghostwriter
 ```
 
 Open in Android Studio (latest stable), sync Gradle, and build:
@@ -29,7 +29,7 @@ You'll need a real device to test — the Accessibility Service doesn't work pro
 | Area | What's needed |
 |:-----|:-------------|
 | **Commands** | New built-in AI commands with useful prompts |
-| **Providers** | Integrations with OpenAI-compatible endpoints |
+| **Providers** | Ghostwriter Cloud (hosted, zero-config) + open AI-compatible endpoints |
 | **Translations** | New language strings in `app/src/main/res/values-XX/strings.xml` |
 | **Bug fixes** | Especially around text replacement edge cases in specific apps |
 | **UI** | Material 3 improvements that respect both AMOLED dark and light themes |
@@ -66,9 +66,9 @@ manual testing on a real device is still essential:
 1. **Enable the Accessibility Service** on your device
 2. **Test trigger detection** — type triggers in WhatsApp, Gmail, Notes, and Chrome
 3. **Verify password fields are skipped** — type a trigger in a password field, nothing should happen
-4. **Test both command types** — AI commands (need API key) and text replacer (offline)
+4. **Test both command types** - AI commands (hosted backend) and text replacer (offline)
 5. **Check the undo command** — `?undo` should restore previous text
-6. **Test the text-selection popup** — select text in an app, tap SwiftSlate in the Copy/Share
+6. **Test the text-selection popup** — select text in an app, tap Ghostwriter in the Copy/Share
    menu, run a command, and confirm Insert/Copy work — with accessibility enabled and disabled
 7. **Verify on API 23** — if you use any newer API, guard it with a version check
 

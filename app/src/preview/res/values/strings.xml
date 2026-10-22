@@ -6,6 +6,6 @@
   matter for translation coverage all live in the main source set.
 -->
 <resources>
-    <string name="app_name">SwiftSlate Preview</string>
-    <string name="accessibility_service_label">SwiftSlate Preview</string>
+    <string name="app_name">Ghostwriter Preview</string>
+    <string name="accessibility_service_label">Ghostwriter Preview</string>
 </resources>

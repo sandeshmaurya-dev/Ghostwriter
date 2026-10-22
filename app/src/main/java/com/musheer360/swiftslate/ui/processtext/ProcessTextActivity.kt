@@ -128,7 +128,7 @@ class ProcessTextActivity : ComponentActivity() {
 
     private fun copyToClipboard(text: String) {
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
-        clipboard?.setPrimaryClip(ClipData.newPlainText("SwiftSlate", text))
+        clipboard?.setPrimaryClip(ClipData.newPlainText("Ghostwriter", text))
     }
 }
 

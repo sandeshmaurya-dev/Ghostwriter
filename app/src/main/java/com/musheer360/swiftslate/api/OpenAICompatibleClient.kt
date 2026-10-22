@@ -200,19 +200,193 @@ class OpenAICompatibleClient {
         temperature: Double,
         endpoint: String,
         useJsonObjectMode: Boolean = false,
-        extraParams: Map<String, Any> = emptyMap()
+        extraParams: Map<String, Any> = emptyMap(),
+        systemPrompt: String? = null
     ): Result<GenerateResult> = withContext(Dispatchers.IO) {
-        var result = doGenerate(prompt, text, apiKey, model, temperature, endpoint, useJsonObjectMode, extraParams)
+        var result = doGenerate(prompt, text, apiKey, model, temperature, endpoint, useJsonObjectMode, extraParams, systemPrompt)
 
         // Retry once for transient network/server errors (with 1.5s backoff)
         if (result.isFailure && result.exceptionOrNull().isTransientNetwork()) {
             kotlinx.coroutines.delay(1500)
-            result = doGenerate(prompt, text, apiKey, model, temperature, endpoint, useJsonObjectMode, extraParams)
+            result = doGenerate(prompt, text, apiKey, model, temperature, endpoint, useJsonObjectMode, extraParams, systemPrompt)
         }
 
         val cleaned = stripHttpPrefix(result.map { it.text })
         val meta = result.getOrNull()
         cleaned.map { GenerateResult(it, meta?.structuredOutputFailed == true, meta?.truncated == true) }
+    }
+
+    /**
+     * Streaming variant of [generate]: identical body plus `"stream": true`, parsing the
+     * server-sent-event chunks (`data: {...}` lines, terminated by `data: [DONE]`).
+     * [onDelta] receives the content ACCUMULATED so far — cumulative, not the bare delta —
+     * so a caller can rewrite a field with every chunk.
+     *
+     * JSON mode is deliberately unreachable here (the caller passes it off while
+     * streaming): a partial `{"text": "he` is unparseable mid-stream and JSON-mode's
+     * whole purpose — verifiable schema output — collapses when the text is shown while
+     * still being generated. Reasoning models that embed `<think>` in the raw content are
+     * reported RAW and stripped at the END here, while the service hides the not-yet-
+     * closed block on its live frames via [ApiClientUtils.streamingDisplayText] — so the
+     * chain of thought never lands in the user's field live or final.
+     *
+     * Single-shot: retrying transient failures inside this method would visually rewind
+     * the already-streamed text; the caller's key-rotation loop covers it.
+     */
+    suspend fun generateStream(
+        prompt: String,
+        text: String,
+        apiKey: String,
+        model: String,
+        temperature: Double,
+        endpoint: String,
+        extraParams: Map<String, Any> = emptyMap(),
+        onDelta: (String) -> Unit,
+        systemPrompt: String? = null
+    ): Result<GenerateResult> = withContext(Dispatchers.IO) {
+        if (EndpointValidator.validate(endpoint) != EndpointValidator.Error.NONE) {
+            return@withContext Result.failure(Exception("Endpoint must be https:// or an http:// private-LAN address"))
+        }
+        var connection: HttpURLConnection? = null
+        try {
+            val baseUrl = endpoint.trimEnd('/')
+            connection = URL("$baseUrl/chat/completions")
+                .openConnection() as HttpURLConnection
+            connection.requestMethod = "POST"
+            connection.setRequestProperty("Content-Type", "application/json")
+            connection.setRequestProperty("Authorization", "Bearer $apiKey")
+            connection.setRequestProperty("Accept", "text/event-stream")
+            connection.doOutput = true
+            connection.connectTimeout = 30_000
+            connection.readTimeout = 60_000
+
+            val jsonBody = JSONObject().apply {
+                val safeModel = model.replace(Regex("[^a-zA-Z0-9._\\-/: ]"), "")
+                put("model", safeModel)
+                put("messages", JSONArray().apply {
+                    put(JSONObject().apply {
+                        put("role", "system")
+                        put("content", systemPrompt ?: ApiClientUtils.SYSTEM_PROMPT_PREFIX + prompt)
+                    })
+                    put(JSONObject().apply {
+                        put("role", "user")
+                        put("content", ApiClientUtils.wrapUserText(text))
+                    })
+                })
+                put("temperature", temperature)
+                put("stream", true)
+                extraParams.forEach { (k, v) -> put(k, v) }
+            }
+
+            connection.outputStream.use { os ->
+                os.write(jsonBody.toString().toByteArray(Charsets.UTF_8))
+            }
+
+            val responseCode = connection.responseCode
+            if (responseCode !in 200..299) {
+                val errorBody = ApiClientUtils.readErrorBody(connection)
+                throw mapStreamError(responseCode, connection.getHeaderField("Retry-After"), errorBody)
+            }
+
+            val accumulated = StringBuilder()
+            var finishReason = ""
+            connection.inputStream.bufferedReader(Charsets.UTF_8).forEachLine { line ->
+                if (!line.startsWith("data:")) return@forEachLine
+                val payload = line.removePrefix("data:").trim()
+                if (payload.isEmpty()) return@forEachLine
+                if (payload == "[DONE]") return@forEachLine
+                try {
+                    val choice = JSONObject(payload)
+                        .optJSONArray("choices")?.optJSONObject(0)
+                        ?: return@forEachLine
+                    choice.optString("finish_reason", "").takeIf { it.isNotEmpty() }?.let {
+                        finishReason = it
+                    }
+                    val delta = choice.optJSONObject("delta") ?: return@forEachLine
+                    val t = delta.optString("content", "")
+                    if (t.isNotEmpty()) {
+                        accumulated.append(t)
+                        onDelta(accumulated.toString())
+                    }
+                } catch (_: org.json.JSONException) {
+                    // A malformed chunk is tolerated: the next chunk carries the state.
+                }
+            }
+
+            if (finishReason == "content_filter") {
+                throw ApiException(ApiError.Other("Response blocked by content filter"), "Response blocked by content filter")
+            }
+
+            // Same order as [doGenerate]: reasoning first (raw-embedded CoT), then fences.
+            val resultText = ApiClientUtils.stripMarkdownFences(
+                ApiClientUtils.stripReasoningBlock(accumulated.toString())
+            )
+            if (resultText.isBlank()) {
+                Result.failure(Exception("Model returned empty response"))
+            } else {
+                Result.success(GenerateResult(resultText, truncated = finishReason == "length"))
+            }
+        } catch (e: Exception) {
+            val apiError = when (e) {
+                is ApiException -> e.apiError
+                is SocketTimeoutException, is UnknownHostException, is ConnectException, is java.net.SocketException -> ApiError.Network(e.message ?: "Network error")
+                is org.json.JSONException -> ApiError.Other("Invalid response from server")
+                else -> ApiError.Other(e.message ?: "Unknown error")
+            }
+            if (e is ApiException) Result.failure(e) else Result.failure(ApiException(apiError, e.message ?: "Unknown error"))
+        } finally {
+            connection?.disconnect()
+        }
+    }
+
+    /**
+     * Mirrors [doGenerate]'s non-2xx classification (413 → RequestTooLarge for key
+     * cooling, 429 with Retry-After, 401/403 with the Ollama-Cloud signin probe, the
+     * 400/[providerCode] preservation, model_not_found normalization) so key rotation
+     * and benching behave identically streamed or not.
+     */
+    private fun mapStreamError(
+        responseCode: Int,
+        retryAfterHeader: String?,
+        errorBody: String
+    ): ApiException {
+        val apiMessage = ApiClientUtils.extractApiErrorMessage(errorBody)
+        return when (responseCode) {
+            413 -> {
+                val detail = apiMessage.ifEmpty { "Request too large" }
+                ApiException(ApiError.RequestTooLarge(detail), detail)
+            }
+            429 -> {
+                val seconds = retryAfterHeader?.toIntOrNull()
+                val msg = if (seconds != null) "Rate limit exceeded, retry after ${seconds}s" else "Rate limit exceeded"
+                ApiException(ApiError.RateLimit(msg, seconds), msg)
+            }
+            400, 422 -> {
+                val detail = apiMessage.ifEmpty { "Bad request" }
+                val providerCode = ApiClientUtils.extractApiErrorCode(errorBody)
+                val withCode = if (providerCode.isNotEmpty()) "$detail [$providerCode]" else detail
+                ApiException(ApiError.Other(withCode), "HTTP_${responseCode}: $withCode")
+            }
+            401, 403 -> {
+                val signinUrl = ApiClientUtils.extractSigninUrl(errorBody)
+                val detail = when {
+                    signinUrl != null || apiMessage.contains("not currently signed in", ignoreCase = true) ->
+                        "${ApiClientUtils.SIGNIN_REQUIRED_MARKER}: ${apiMessage.ifEmpty { "server sign-in required" }}"
+                    apiMessage.isNotEmpty() -> apiMessage
+                    else -> "Invalid API key"
+                }
+                ApiException(ApiError.InvalidKey(detail), detail)
+            }
+            else -> {
+                var detail = ApiClientUtils.sanitizeErrorForUser(responseCode, errorBody, "Unexpected error (HTTP $responseCode)")
+                val providerCode = ApiClientUtils.extractApiErrorCode(errorBody)
+                if (responseCode == 404 || providerCode == "model_not_found") {
+                    detail = "Model not found. $detail"
+                }
+                val apiError = if (responseCode in 500..599) ApiError.ServerError(detail) else ApiError.Other(detail)
+                ApiException(apiError, detail)
+            }
+        }
     }
 
     private fun stripHttpPrefix(result: Result<String>): Result<String> {
@@ -232,7 +406,8 @@ class OpenAICompatibleClient {
         temperature: Double,
         endpoint: String,
         withJsonObject: Boolean = false,
-        extraParams: Map<String, Any> = emptyMap()
+        extraParams: Map<String, Any> = emptyMap(),
+        systemPrompt: String? = null
     ): Result<GenerateResult> {
         if (EndpointValidator.validate(endpoint) != EndpointValidator.Error.NONE) {
             return Result.failure(Exception("Endpoint must be https:// or an http:// private-LAN address"))
@@ -249,10 +424,11 @@ class OpenAICompatibleClient {
             connection.connectTimeout = 30_000
             connection.readTimeout = 60_000
 
+            val basePrefix = systemPrompt ?: ApiClientUtils.SYSTEM_PROMPT_PREFIX
             val systemContent = if (withJsonObject) {
-                ApiClientUtils.SYSTEM_PROMPT_PREFIX + prompt + " Respond with JSON: {\"text\": \"your result\"}"
+                basePrefix + prompt + " Respond with JSON: {\"text\": \"your result\"}"
             } else {
-                ApiClientUtils.SYSTEM_PROMPT_PREFIX + prompt
+                basePrefix + prompt
             }
 
             val jsonBody = JSONObject().apply {

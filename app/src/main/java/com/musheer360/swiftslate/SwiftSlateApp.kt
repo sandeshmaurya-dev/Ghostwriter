@@ -9,6 +9,9 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.musheer360.swiftslate.manager.KeyManager
+import com.musheer360.swiftslate.model.PrefKeys
+import com.musheer360.swiftslate.model.ProviderType
+import com.musheer360.swiftslate.provider.CloudConfig
 import com.musheer360.swiftslate.worker.UpdateCheckWorker
 import java.util.concurrent.TimeUnit
 
@@ -41,6 +44,36 @@ class SwiftSlateApp : Application() {
 
         installCrashMarker()
         scheduleUpdateCheck()
+        provisionCloudIdentity()
+    }
+
+    /**
+     * Zero-config bootstrap. The hosted Ghostwriter Cloud worker holds the real
+     * upstream credentials server-side; this app only needs A key entry to exist
+     * so the rotation loop has something to hold (the UI never shows it). On first
+     * launch — and on any launch where the keystore turns out empty (e.g. a
+     * backup-restore device wipe) — the placeholder identity is re-seeded and the
+     * provider is pinned to Cloud. Users never see a key, a picker or a prompt.
+     */
+    private fun provisionCloudIdentity() {
+        val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
+        Thread {
+            try {
+                val seeded = keyManager.getKeys().isEmpty()
+                if (seeded) {
+                    keyManager.addKey(CloudConfig.PLACEHOLDER_KEY)
+                }
+                if (seeded || prefs.getString(PrefKeys.PROVIDER_TYPE, null) == null) {
+                    prefs.edit()
+                        .putString(PrefKeys.PROVIDER_TYPE, ProviderType.CLOUD)
+                        .putString(PrefKeys.CLOUD_MODEL, "")
+                        .apply()
+                }
+            } catch (_: Exception) {
+                // Keystore can be briefly unreadable right after boot; the next
+                // launch re-runs this. Nothing user-facing depends on it.
+            }
+        }.start()
     }
 
     /**
